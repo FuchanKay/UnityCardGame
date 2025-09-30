@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 public class DiscardPile
 {
-    private List<Card> discardPile;
+    private List<CardModel> discardPile;
     public DiscardPile()
     {
         this.New();
@@ -11,33 +11,33 @@ public class DiscardPile
 
     public void New()
     {
-        discardPile = new List<Card>();
+        discardPile = new List<CardModel>();
     }
 
-    public List<Card> Reshuffle()
+    public List<CardModel> Reshuffle()
     {
-        List<Card> shuffled = new List<Card>();
+        List<CardModel> shuffled = new List<CardModel>();
         int size = discardPile.Count;
         for (int i = 0; i < size; i++)
         {
             int index = Random.Range(0, discardPile.Count);
-            Card removed = discardPile[index];
+            CardModel removed = discardPile[index];
             discardPile.RemoveAt(index); 
             shuffled.Add(removed);
         }
         return shuffled;
     }
 
-    public void AddCard(Card card)
+    public void AddCard(CardModel card)
     {
         discardPile.Add(card);
     }
 
-    public void AddCards(List<Card> cards)
+    public void AddCards(List<CardModel> cards)
     {
         for (int i = 0; i <= cards.Count; i++)
         {
-            Card card = cards[i];
+            CardModel card = cards[i];
             discardPile.Add(card);
         }
     }

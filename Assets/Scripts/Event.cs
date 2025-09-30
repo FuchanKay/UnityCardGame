@@ -33,18 +33,18 @@ public class ResourceEvent : Event
 
 public class DrawPileEvent : Event
 {
-    private Card? card;
-    private List<Card>? cards;
+    private CardModel? card;
+    private List<CardModel>? cards;
     private bool top;
 
-    public DrawPileEvent(GameModel game, Card card, bool top = true)
+    public DrawPileEvent(GameModel game, CardModel card, bool top = true)
     {
         this.game = game;
         this.card = card;
         this.top = top;
     }
 
-    public DrawPileEvent(GameModel game, List<Card> cards)
+    public DrawPileEvent(GameModel game, List<CardModel> cards)
     {
         this.game = game;
         this.cards = cards;
@@ -71,16 +71,16 @@ public class DrawPileEvent : Event
 
 public class DiscardPileEvent : Event
 {
-    private Card? card;
-    private List<Card>? cards;
+    private CardModel? card;
+    private List<CardModel>? cards;
 
-    public DiscardPileEvent(GameModel game, Card card, bool top = true)
+    public DiscardPileEvent(GameModel game, CardModel card, bool top = true)
     {
         this.game = game;
         this.card = card;
     }
 
-    public DiscardPileEvent(GameModel game, List<Card> cards, bool top = true)
+    public DiscardPileEvent(GameModel game, List<CardModel> cards, bool top = true)
     {
         this.game = game;
         this.cards = cards;
@@ -114,11 +114,11 @@ public class DrawCardEvent : Event
         {
             if (this.game.drawPile.Size() > 0)
             {
-                Card card = this.game.drawPile.DrawCard();
+                CardModel card = this.game.drawPile.DrawCard();
             }
             else if (this.game.discardPile.Size() > 0)
             {
-                List<Card> shuffled = this.game.discardPile.Reshuffle();
+                List<CardModel> shuffled = this.game.discardPile.Reshuffle();
                 this.game.drawPile.AddCards(shuffled);
             }
         }
@@ -137,7 +137,7 @@ public class DiscardAllCardsEvent : Event
     {
         for (int i = 0; i < game.hand.size; i++)
         {
-            Card card = game.hand.removeCard(i);
+            CardModel card = game.hand.removeCard(i);
             if (card.type != Type.Empty)
             {
                 game.discardPile.AddCard(card);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Deck
 {
-    private List<Card> deck;
+    private List<CardModel> deck;
 
     public Deck()
     {
@@ -13,19 +13,19 @@ public class Deck
 
     public void New()
     {
-        deck = new List<Card>();
+        deck = new List<CardModel>();
     }
 
-    public void AddCard(Card card)
+    public void AddCard(CardModel card)
     {
         deck.Add(card);
     }
 
     //questionable if this will ever be used
-    public Card RemoveAny()
+    public CardModel RemoveAny()
     {
         int index = Random.Range(0, deck.Count);
-        Card card = deck[index];
+        CardModel card = deck[index];
         deck.RemoveAt(index);
         return card;
         
@@ -34,12 +34,12 @@ public class Deck
     {
         return deck.Count;
     }
-    public void RemoveCard(Card card)
+    public void RemoveCard(CardModel card)
     {
         deck.Remove(card);
     }
 
-    public Card Get(int index)
+    public CardModel Get(int index)
     {
         return deck[index];
     }

@@ -23,6 +23,9 @@ public class GameModel
         deck = new Deck();
         eventQueue = new EventQueue();
         resourceCount = new ResourceCount();
+        drawPile = new DrawPile();
+        discardPile = new DiscardPile();
+        hand = new Hand();
     }
 
     public void QueueEvent(Event e)
@@ -41,31 +44,31 @@ public class GameModel
         this.QueueEvent(addResourceEvent);
     }
 
-    public void AddCardToTopOfDrawPile(Card card)
+    public void AddCardToTopOfDrawPile(CardModel card)
     {
         Event addCardToTopOfDrawPile = new DrawPileEvent(this, card);
         this.QueueEvent(addCardToTopOfDrawPile);
     }
 
-    public void AddCardToDrawPile(Card card)
+    public void AddCardToDrawPile(CardModel card)
     {
         Event addCardToDrawPile = new DrawPileEvent(this, card, false);
         this.QueueEvent(addCardToDrawPile);
     }
 
-    public void AddCardsToDrawPile(List<Card> cards)
+    public void AddCardsToDrawPile(List<CardModel> cards)
     {
         Event addCardsToDrawPile = new DrawPileEvent(this, cards);
         this.QueueEvent(addCardsToDrawPile);
     }
 
-    public void AddCardToDiscardPile(Card card)
+    public void AddCardToDiscardPile(CardModel card)
     {
         Event addCardToDiscardPile = new DiscardPileEvent(this, card);
         this.QueueEvent(addCardToDiscardPile);
     }
 
-    public void AddCardsToDiscardPile(List<Card> cards)
+    public void AddCardsToDiscardPile(List<CardModel> cards)
     {
         Event addCardsToDiscardPile = new DiscardPileEvent(this, cards);
         this.QueueEvent(addCardsToDiscardPile);

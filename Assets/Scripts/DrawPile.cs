@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 public class DrawPile
 {
-    private List<Card> drawPile;
+    private List<CardModel> drawPile;
 
     public DrawPile()
     {
@@ -14,12 +14,12 @@ public class DrawPile
 
     public void New()
     {
-        drawPile = new List<Card>();
+        drawPile = new List<CardModel>();
     }
 
     public void AddDeck(Deck deck)
     {
-        List<Card> deckCopy = new List<Card>();
+        List<CardModel> deckCopy = new List<CardModel>();
         for (int i = 0; i < deck.Size(); i++)
         {
             deckCopy.Add(deck.Get(i));
@@ -28,21 +28,21 @@ public class DrawPile
         for (int i = 0; i < size; i++)
         {
             int index = Random.Range(0, deckCopy.Count);
-            Card card = deckCopy[index];
+            CardModel card = deckCopy[index];
             deckCopy.RemoveAt(index);
             drawPile.Add(card);
         }
     }
-    public void AddCard(Card card)
+    public void AddCard(CardModel card)
     {
         drawPile.Insert(Random.Range(0, drawPile.Count), card);
     }
 
-    public void AddCardTop(Card card)
+    public void AddCardTop(CardModel card)
     {
         drawPile.Insert(0, card);
     }
-    public void AddCards(List<Card> cards)
+    public void AddCards(List<CardModel> cards)
     {
         for (int i = cards.Count - 1; i >= 0; i--)
         {
@@ -55,11 +55,11 @@ public class DrawPile
         return drawPile.Count;
     }
 
-    public Card DrawCard()
+    public CardModel DrawCard()
     {
         if (drawPile.Count >= 0)
         {
-            Card firstCard = drawPile[0];
+            CardModel firstCard = drawPile[0];
             drawPile.RemoveAt(0);
             return firstCard;
         }

@@ -13,7 +13,7 @@ public enum Type
     Blight
 }
 
-public class Card
+public class CardModel
 {
     public Type type;
     public Letter letter;
@@ -41,7 +41,7 @@ public class Card
     public Event? whenSwapped;
     public string swappedDescription;
 
-    public Card (
+    public CardModel (
         Type type, Letter letter = Letter.A,
         int drawnNum = 1, Event whenDrawn = null, string drawnDescription = "",
         bool retain = false, Event whenRetained = null, string retainedDescription = "",
