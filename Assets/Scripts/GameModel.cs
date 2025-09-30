@@ -1,4 +1,7 @@
-﻿public class GameModel
+﻿/*
+ * Access to GameModel allows access to any component of the game.
+ */
+public class GameModel
 {
     private Deck deck;
     private EventQueue eventQueue;
@@ -6,6 +9,11 @@
 
 
     public GameModel()
+    {
+        this.New();
+    }
+
+    public void New()
     {
         deck = new Deck();
         eventQueue = new EventQueue();
@@ -26,5 +34,4 @@
     {
         resourceCount.AddResource(type, count); 
     }
-
 }
