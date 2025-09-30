@@ -49,6 +49,6 @@ public class CardBehavior : MonoBehaviour
         Debug.Log("hello");
         isSelected = !isSelected;
         float scale = isSelected ? SELECTED_SCALE : UNSELECTED_SCALE;
-        this.transform.localScale = new Vector3(scale, scale, 0.5f)    ;
+        this.transform.localScale = new Vector3(scale, scale, 0.5f);
     }
 }
