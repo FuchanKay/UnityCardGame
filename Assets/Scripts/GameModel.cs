@@ -1,11 +1,16 @@
 ﻿/*
  * Access to GameModel allows access to any component of the game.
  */
+using System.Collections.Generic;
+
 public class GameModel
 {
-    private Deck deck;
-    private EventQueue eventQueue;
-    private ResourceCount resourceCount;
+    public Deck deck;
+    public EventQueue eventQueue;
+    public ResourceCount resourceCount;
+    public DrawPile drawPile;
+    public DiscardPile discardPile;
+    public Hand hand;
 
 
     public GameModel()
@@ -32,6 +37,37 @@ public class GameModel
 
     public void AddResource(Type type, int count)
     {
-        resourceCount.AddResource(type, count); 
+        Event addResourceEvent = new ResourceEvent(this, type, count);
+        this.QueueEvent(addResourceEvent);
+    }
+
+    public void AddCardToTopOfDrawPile(Card card)
+    {
+        Event addCardToTopOfDrawPile = new DrawPileEvent(this, card);
+        this.QueueEvent(addCardToTopOfDrawPile);
+    }
+
+    public void AddCardToDrawPile(Card card)
+    {
+        Event addCardToDrawPile = new DrawPileEvent(this, card, false);
+        this.QueueEvent(addCardToDrawPile);
+    }
+
+    public void AddCardsToDrawPile(List<Card> cards)
+    {
+        Event addCardsToDrawPile = new DrawPileEvent(this, cards);
+        this.QueueEvent(addCardsToDrawPile);
+    }
+
+    public void AddCardToDiscardPile(Card card)
+    {
+        Event addCardToDiscardPile = new DiscardPileEvent(this, card);
+        this.QueueEvent(addCardToDiscardPile);
+    }
+
+    public void AddCardsToDiscardPile(List<Card> cards)
+    {
+        Event addCardsToDiscardPile = new DiscardPileEvent(this, cards);
+        this.QueueEvent(addCardsToDiscardPile);
     }
 }

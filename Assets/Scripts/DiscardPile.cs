@@ -41,4 +41,9 @@ public class DiscardPile
             discardPile.Add(card);
         }
     }
+
+    public int Size()
+    {
+        return discardPile.Count;
+    }
 }
