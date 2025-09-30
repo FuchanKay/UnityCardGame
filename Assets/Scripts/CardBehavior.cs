@@ -17,21 +17,26 @@ public class CardBehavior : MonoBehaviour
     void Start()
     {
         point = new Vector2(this.transform.position.x, this.transform.position.y);
+        Letter x = Letter.X;
+        if (x == Letter.X)
+        {
+            Debug.Log("XXX");
+        }
     }
 
     // Update is called once per frame  
     void Update()
     {
-        if (this.isSelected) this.point = Mouse.current.position.ReadValue();
-        float dx = this.point.x - this.transform.position.x;
-        float dy = this.point.y - this.transform.position.y;
+        if (isSelected) point = Mouse.current.position.ReadValue();
+        float dx = point.x - this.transform.position.x;
+        float dy = point.y - this.transform.position.y;
 
-        float magnitude = Mathf.Pow((dx * dx + dy * dy), 0.25f);
+        float magnitude = Mathf.Pow(dx * dx + dy * dy, 0.25f);
 
         if (magnitude >= 0.01)
         {
-            dx *= this.speed / magnitude;
-            dy *= this.speed / magnitude;
+            dx *= speed / magnitude;
+            dy *= speed / magnitude;
         }
         if (Mathf.Abs(dx) < MOVEMENT_BUFFER) dx = 0;
         if (Mathf.Abs(dy) < MOVEMENT_BUFFER) dy = 0;
@@ -39,14 +44,13 @@ public class CardBehavior : MonoBehaviour
         this.transform.position = new Vector3(this.transform.position.x + dx, this.transform.position.y + dy, 0);
     }
 
-    public void onDrag()
+    public void OnDrag()
     {
         point = Mouse.current.position.ReadValue();
     }
 
-    public void select()
+    public void Select()
     {
-        Debug.Log("hello");
         isSelected = !isSelected;
         float scale = isSelected ? SELECTED_SCALE : UNSELECTED_SCALE;
         this.transform.localScale = new Vector3(scale, scale, 0.5f);

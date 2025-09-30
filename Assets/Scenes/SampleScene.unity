@@ -580,7 +580,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -947654992510035608, guid: e58ce95d5fa4bd147932a2a467d08704, type: 3}
+  m_Sprite: {fileID: 792117816336652092, guid: a19f4ba12a390e44f8e25fa8a4758c4d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -610,6 +610,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c3a1ace38cad74c9b19c1d273312c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Card
+  speed: 0.25
+  isSelected: 0
 --- !u!114 &1377981944
 MonoBehaviour:
   m_ObjectHideFlags: 0

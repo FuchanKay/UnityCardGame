@@ -1,13 +1,12 @@
 using UnityEngine;
-using Game;
 
 public class GameView : MonoBehaviour
 {
-    private Game game;
+    private GameModel game;
 
     void Start()
     {
-        this.game = new Game();
+        game = new GameModel();
     }
 
     // Update is called once per frame
