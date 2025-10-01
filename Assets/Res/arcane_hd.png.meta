@@ -103,12 +103,12 @@ TextureImporter:
       name: arcane_hd_0
       rect:
         serializedVersion: 2
-        x: 99
-        y: 79
-        width: 492
-        height: 452
+        x: 0
+        y: 0
+        width: 640
+        height: 640
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 4b65dbd0d9eec1147b5b0739d2c9330b
     internalID: 0
     vertices: []
     indices: 

@@ -1,7 +1,7 @@
 ﻿    
 using UnityEditor.Experimental.GraphView;
 
-public class ResourceCount
+public class ResourceCountModel
 {
     const int CAP = 99;
     public int arcaneCount;
@@ -9,7 +9,7 @@ public class ResourceCount
     public int holyCount;
     public int unholyCount;
 
-    public ResourceCount()
+    public ResourceCountModel()
     {
         this.New();
     }

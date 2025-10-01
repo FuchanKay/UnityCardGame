@@ -17,12 +17,21 @@ public class EventQueue
         queue.Enqueue(e);
     }
         
+    public bool HasEvent()
+    {
+        return queue.Count > 0;
+    }
+
     public void Execute(int num = 1)
     {
         for (int i = 0 ; i < num; i++)
         {
-            Event e = queue.Dequeue();
-            e.Execute();
+            if (queue.Count > 0)
+            {
+                Event e = queue.Dequeue();
+                e.Execute();
+            }
+
         }
     }
 }

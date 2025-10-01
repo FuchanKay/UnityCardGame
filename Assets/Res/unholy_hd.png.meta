@@ -103,12 +103,12 @@ TextureImporter:
       name: unholy_hd_0
       rect:
         serializedVersion: 2
-        x: 159
-        y: 59
-        width: 342
-        height: 552
+        x: 0
+        y: 0
+        width: 640
+        height: 640
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: a48c1a13da801f241afc3f8ce1c8a9c1
     internalID: 0
     vertices: []
     indices: 

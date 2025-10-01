@@ -3,23 +3,55 @@ using UnityEngine;
 
 public class GameView : MonoBehaviour
 {
-    public GameObject card;
+    public static GameObject cardPrefab;
     public Canvas canvas;
-    private GameModel game;
+    public GameModel game;
+
+    public HandView hand;
+    public ResourceCountView resourceCount;
+
 
     void Start()
     {
-        game = new GameModel();
-        GameObject cardObj = Instantiate(card);
-        CardView cardView = cardObj.GetComponent<CardView>();
-        cardView.model = new CardModel(Type.Holy, Letter.B, 1, new ResourceEvent(game, Type.Holy, 1), "When Drawn, gain 1 Holy");
-        cardObj.transform.position = new Vector3(100, 100, 0);
-        cardObj.transform.SetParent(canvas.transform);
+        game = new();
+        this.Reload();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        bool hasEvent = game.eventQueue.HasEvent();
+        if (hasEvent)
+        {
+            Debug.Log("executed");
+            game.ExecuteEvent();
+            this.Reload();
+        }
+    }
+
+    public void DrawCardInput()
+    {
+        game.DrawCard();
+    }
+
+    public void DiscardHandInput()
+    {
+        game.DiscardHand();
+    }
+
+    public void Reload()
+    {
+        hand.Reload(game.hand);
+        resourceCount.Reload(game.resourceCount);
+    }
+
+    public static GameObject CreateCardView(CardModel model)
+    {
+        GameObject cardObj = Instantiate(cardPrefab);
+        cardObj.name = model.type.ToString() + " " + model.letter.ToString();
+        CardView cardView = cardObj.GetComponent<CardView>();
+        cardView.model = model;
+        //cardObj.transform.position = new(200, 200, 0);
+        return cardObj;
     }
 }

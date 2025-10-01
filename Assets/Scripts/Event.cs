@@ -115,21 +115,26 @@ public class DrawCardEvent : Event
             if (this.game.drawPile.Size() > 0)
             {
                 CardModel card = this.game.drawPile.DrawCard();
+                bool found = this.game.hand.AddCard(card);
+                //TODO: add a visual indicator that hand is full if found is true
             }
             else if (this.game.discardPile.Size() > 0)
             {
                 List<CardModel> shuffled = this.game.discardPile.Reshuffle();
                 this.game.drawPile.AddCards(shuffled);
+                CardModel card = this.game.drawPile.DrawCard();
+                bool found = this.game.hand.AddCard(card);
+                //TODO: add a visual indicator that hand is full if found is true
             }
         }
 
     }
 }
 
-public class DiscardAllCardsEvent : Event
+public class DiscardHandEvent : Event
 {
     
-    public DiscardAllCardsEvent()
+    public DiscardHandEvent()
     {
 
     }
@@ -137,7 +142,7 @@ public class DiscardAllCardsEvent : Event
     {
         for (int i = 0; i < game.hand.size; i++)
         {
-            CardModel card = game.hand.removeCard(i);
+            CardModel card = game.hand.RemoveCard(i);
             if (card.type != Type.Empty)
             {
                 game.discardPile.AddCard(card);

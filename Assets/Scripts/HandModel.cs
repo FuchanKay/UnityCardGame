@@ -2,11 +2,11 @@
 using System.Runtime.ExceptionServices;
 using Unity.VisualScripting;
 using UnityEngine;
-public class Hand
+public class HandModel
 {
     public int size = 7;
     List<CardModel> hand;
-    public Hand()
+    public HandModel()
     {
         this.New();
     }
@@ -29,7 +29,7 @@ public class Hand
         }
     }
 
-    public bool addCard(CardModel card)
+    public bool AddCard(CardModel card)
     {
         int emptyIndex = 0;
         bool found = false;
@@ -49,19 +49,35 @@ public class Hand
         return found;
     }
 
-    public CardModel getCard(int index)
+    //not sure if we need this for now
+    //public bool isFull()
+    //{
+    //    bool isFull = true;
+    //    for (int i = 0; i < hand.Count && isFull; i++)
+    //    {
+    //        Card c = hand[i];
+    //        if (c.type == Type.Empty)
+    //        {
+    //            isFull = false;
+    //        }
+    //    }
+    //    return isFull;
+    //}
+
+
+    public CardModel GetCard(int index)
     {
         return hand[index];
     }
 
-    public CardModel removeCard(int index)
+    public CardModel RemoveCard(int index)
     {
         CardModel card = hand[index];
         hand[index] = new CardModel(Type.Empty);
         return card;
     }
 
-    public void discard(CardModel card)
+    public void Discard(CardModel card)
     {
         //TODO: idk
         return;
