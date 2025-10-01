@@ -15,6 +15,19 @@ public class HandView : MonoBehaviour
         
     }
 
+    public void SelectCard(int index, bool selected)
+    {
+        if (selected)
+        {
+            CardView card = cardViews[index];
+            card.GetComponent<RectTransform>().rect.width = 
+        }
+        else
+        {
+
+        }
+    }
+
     public void Reload(HandModel hand)
     {
         for (int i = 0; i < hand.size; i++)

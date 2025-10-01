@@ -49,8 +49,6 @@ public class GameModel
         //adds deck to draw pile
         drawPile.AddDeck(deck);
 
-        Debug.Log("draw pile size: " + drawPile.Size());
-
         //test resource count for now
         resourceCount.AddResource(Type.Arcane, 11);
         resourceCount.AddResource(Type.Hemo, 12);
