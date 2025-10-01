@@ -2,11 +2,11 @@
 using System.Linq;
 using UnityEngine;
 
-public class Deck
+public class DeckModel
 {
     private List<CardModel> deck;
 
-    public Deck()
+    public DeckModel()
     {
         this.New();
     }

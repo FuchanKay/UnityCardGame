@@ -1,13 +1,10 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
+﻿using System.Collections.Generic;
 using UnityEngine;
-public class DrawPile
+public class DrawPileModel
 {
     private List<CardModel> drawPile;
 
-    public DrawPile()
+    public DrawPileModel()
     {
         this.New();
     }
@@ -17,7 +14,7 @@ public class DrawPile
         drawPile = new List<CardModel>();
     }
 
-    public void AddDeck(Deck deck)
+    public void AddDeck(DeckModel deck)
     {
         List<CardModel> deckCopy = new List<CardModel>();
         for (int i = 0; i < deck.Size(); i++)

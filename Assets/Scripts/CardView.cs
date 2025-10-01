@@ -11,6 +11,7 @@ public class CardView : MonoBehaviour
     public Sprite holyImage;
     public Sprite unholyImage;
 
+    public Sprite normalBodyImage;
     public Sprite grayBodyImage;
 
     public GameObject rune;
@@ -33,11 +34,14 @@ public class CardView : MonoBehaviour
 
     public void UpdateModel(CardModel model)
     {
+        this.model = model;
         Image runeImg = rune.GetComponent<Image>();
         TextMeshProUGUI tmp = text.GetComponent<TMPro.TextMeshProUGUI>();
         Sprite img = arcaneImage;
         runeImg.enabled = true;
         letter = model.letter.ToString();
+        Image bodyImg = body.GetComponent<Image>();
+        bodyImg.sprite = normalBodyImage;
         if (model.type == Type.Hemo) img = hemoImage;
         else if (model.type == Type.Holy) img = holyImage;
         else if (model.type == Type.Unholy) img = unholyImage;
@@ -46,7 +50,6 @@ public class CardView : MonoBehaviour
             runeImg.enabled = false;
             runeImg.sprite = img;
             letter = "";
-            Image bodyImg = body.GetComponent<Image>();
             bodyImg.sprite = grayBodyImage;
         }
         tmp.text = letter;

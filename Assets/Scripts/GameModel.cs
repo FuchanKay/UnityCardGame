@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class GameModel
 {
-    public Deck deck;
+    public DeckModel deck;
     public EventQueue eventQueue;
     public ResourceCountModel resourceCount;
-    public DrawPile drawPile;
-    public DiscardPile discardPile;
+    public DrawPileModel drawPile;
+    public DiscardPileModel discardPile;
     public HandModel hand;
 
 
@@ -21,26 +21,37 @@ public class GameModel
 
     public void New()
     {
-        deck = new Deck();
+        deck = new DeckModel();
         eventQueue = new EventQueue();
         resourceCount = new ResourceCountModel();
-        drawPile = new DrawPile();
-        discardPile = new DiscardPile();
+        drawPile = new DrawPileModel();
+        discardPile = new DiscardPileModel();
         hand = new HandModel();
 
+        //original deck for now
         deck.AddCard(new CardModel(Type.Arcane, Letter.A, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
-        deck.AddCard(new CardModel(Type.Hemo, Letter.A, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
-        deck.AddCard(new CardModel(Type.Holy, Letter.A, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
-        deck.AddCard(new CardModel(Type.Unholy, Letter.A, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
+        deck.AddCard(new CardModel(Type.Hemo, Letter.B, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
+        deck.AddCard(new CardModel(Type.Holy, Letter.C, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
+        deck.AddCard(new CardModel(Type.Unholy, Letter.D, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
+        deck.AddCard(new CardModel(Type.Arcane, Letter.E, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
+        deck.AddCard(new CardModel(Type.Hemo, Letter.F, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
+        deck.AddCard(new CardModel(Type.Holy, Letter.G, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
+        deck.AddCard(new CardModel(Type.Unholy, Letter.H, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
         deck.AddCard(new CardModel(Type.Arcane, Letter.A, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
-        deck.AddCard(new CardModel(Type.Hemo, Letter.A, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
-        deck.AddCard(new CardModel(Type.Holy, Letter.A, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
-        deck.AddCard(new CardModel(Type.Unholy, Letter.A, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
+        deck.AddCard(new CardModel(Type.Hemo, Letter.B, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
+        deck.AddCard(new CardModel(Type.Holy, Letter.C, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
+        deck.AddCard(new CardModel(Type.Unholy, Letter.D, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
+        deck.AddCard(new CardModel(Type.Arcane, Letter.E, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
+        deck.AddCard(new CardModel(Type.Hemo, Letter.F, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
+        deck.AddCard(new CardModel(Type.Holy, Letter.G, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
+        deck.AddCard(new CardModel(Type.Unholy, Letter.H, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
 
+        //adds deck to draw pile
         drawPile.AddDeck(deck);
 
         Debug.Log("draw pile size: " + drawPile.Size());
 
+        //test resource count for now
         resourceCount.AddResource(Type.Arcane, 11);
         resourceCount.AddResource(Type.Hemo, 12);
         resourceCount.AddResource(Type.Holy, 13);
@@ -101,7 +112,7 @@ public class GameModel
 
     public void DiscardHand()
     {
-        Event discardHand = new DiscardHandEvent();
+        Event discardHand = new DiscardHandEvent(this);
         this.QueueEvent(discardHand);
     }
 }

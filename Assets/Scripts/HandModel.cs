@@ -49,20 +49,19 @@ public class HandModel
         return found;
     }
 
-    //not sure if we need this for now
-    //public bool isFull()
-    //{
-    //    bool isFull = true;
-    //    for (int i = 0; i < hand.Count && isFull; i++)
-    //    {
-    //        Card c = hand[i];
-    //        if (c.type == Type.Empty)
-    //        {
-    //            isFull = false;
-    //        }
-    //    }
-    //    return isFull;
-    //}
+    public bool IsFull()
+    {
+        bool isFull = true;
+        for (int i = 0; i < hand.Count && isFull; i++)
+        {
+            CardModel c = hand[i];
+            if (c.type == Type.Empty)
+            {
+                isFull = false;
+            }
+        }
+        return isFull;
+    }
 
 
     public CardModel GetCard(int index)

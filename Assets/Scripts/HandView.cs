@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HandView : MonoBehaviour
 {
-    public List<GameObject> cards;
+    public List<GameObject> cardViews;
     void Start()
     {
     }
@@ -21,7 +21,7 @@ public class HandView : MonoBehaviour
         {
             CardModel cardModel = hand.GetCard(i);
 
-            CardView cardView = cards[i].GetComponent<CardView>();
+            CardView cardView = cardViews[i].GetComponent<CardView>();
 
             cardView.UpdateModel(cardModel);
         }

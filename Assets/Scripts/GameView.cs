@@ -9,10 +9,13 @@ public class GameView : MonoBehaviour
 
     public HandView hand;
     public ResourceCountView resourceCount;
-
+    public DrawPileView drawPile;
+    public DiscardPileView discardPile;
+    public EnemyScreenView enemyScreen;
 
     void Start()
     {
+        Debug.Log("start");
         game = new();
         this.Reload();
     }
@@ -23,7 +26,6 @@ public class GameView : MonoBehaviour
         bool hasEvent = game.eventQueue.HasEvent();
         if (hasEvent)
         {
-            Debug.Log("executed");
             game.ExecuteEvent();
             this.Reload();
         }
@@ -43,12 +45,14 @@ public class GameView : MonoBehaviour
     {
         hand.Reload(game.hand);
         resourceCount.Reload(game.resourceCount);
+        drawPile.Reload(game.drawPile);
+        discardPile.Reload(game.discardPile);
     }
 
     public static GameObject CreateCardView(CardModel model)
     {
         GameObject cardObj = Instantiate(cardPrefab);
-        cardObj.name = model.type.ToString() + " " + model.letter.ToString();
+        //cardObj.name = model.type.ToString() + " " + model.letter.ToString();
         CardView cardView = cardObj.GetComponent<CardView>();
         cardView.model = model;
         //cardObj.transform.position = new(200, 200, 0);

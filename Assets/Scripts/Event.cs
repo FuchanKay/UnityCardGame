@@ -105,6 +105,7 @@ public class DrawCardEvent : Event
 
     public DrawCardEvent(GameModel game, int count)
     {
+        this.game = game;
         this.count = count;
     }
 
@@ -112,13 +113,13 @@ public class DrawCardEvent : Event
     {
         for (int i = 0; i < count; i++)
         {
-            if (this.game.drawPile.Size() > 0)
+            if (this.game.drawPile.Size() > 0 && !this.game.hand.IsFull())
             {
                 CardModel card = this.game.drawPile.DrawCard();
                 bool found = this.game.hand.AddCard(card);
                 //TODO: add a visual indicator that hand is full if found is true
             }
-            else if (this.game.discardPile.Size() > 0)
+            else if (this.game.discardPile.Size() > 0 && !this.game.hand.IsFull())
             {
                 List<CardModel> shuffled = this.game.discardPile.Reshuffle();
                 this.game.drawPile.AddCards(shuffled);
@@ -134,9 +135,9 @@ public class DrawCardEvent : Event
 public class DiscardHandEvent : Event
 {
     
-    public DiscardHandEvent()
+    public DiscardHandEvent(GameModel game)
     {
-
+        this.game = game;
     }
     public override void Execute()
     {

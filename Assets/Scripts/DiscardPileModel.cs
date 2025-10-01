@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public class DiscardPile
+public class DiscardPileModel
 {
     private List<CardModel> discardPile;
-    public DiscardPile()
+    public DiscardPileModel()
     {
         this.New();
     }
