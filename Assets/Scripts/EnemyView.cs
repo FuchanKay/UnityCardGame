@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyView : MonoBehaviour
 {
+    public GameObject screenText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -14,6 +14,7 @@ public class GameView : MonoBehaviour
     public EnemyScreenView enemyScreen;
 
     public GameObject confirmButton;
+    //.setActive(bool);
 
     void Start()
     {
@@ -111,7 +112,6 @@ public class GameView : MonoBehaviour
     public static GameObject CreateCardView(CardModel model)
     {
         GameObject cardObj = Instantiate(cardPrefab);
-        //cardObj.name = model.type.ToString() + " " + model.letter.ToString();
         CardView cardView = cardObj.GetComponent<CardView>();
         cardView.model = model;
         //cardObj.transform.position = new(200, 200, 0);

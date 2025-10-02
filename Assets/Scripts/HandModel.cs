@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using Unity.VisualScripting;
-using UnityEngine;
 public class HandModel
 {
     public int size = 7;
