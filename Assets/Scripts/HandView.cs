@@ -35,7 +35,7 @@ public class HandView : MonoBehaviour
         }
     }
 
-    public void DeselectAll()
+    public void DeselectAllCards()
     {
         for (int i = 0; i < cardViews.Count; i++)
         {
@@ -68,4 +68,4 @@ public class HandView : MonoBehaviour
             cardView.UpdateModel(cardModel);
         }
     }
-}
+} 

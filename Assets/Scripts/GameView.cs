@@ -52,6 +52,12 @@ public class GameView : MonoBehaviour
     }
     //TODO: idk if i need 7 methods for this... i think theres a way to pass parameters through buttons but idk how to do it...
 
+    public void DeselectAll()
+    {
+        game.DeselectAllCards();
+        hand.DeselectAllCards();
+        Reload();
+    }
     public void Confirm()
     {
         Debug.Log("Confirm");

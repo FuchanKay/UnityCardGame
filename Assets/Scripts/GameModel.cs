@@ -63,6 +63,11 @@ public class GameModel
         return selected;
     }
 
+    public void DeselectAllCards()
+    {
+        hand.DeselectAllCards();
+    }
+
     public void QueueEvent(Event e)
     {
         eventQueue.QueueEvent(e);
