@@ -5,7 +5,9 @@ using UnityEngine;
 public class HandModel
 {
     public int size = 7;
+    public int selectionNum = 4;
     List<CardModel> hand;
+    List<CardModel> selectedCards;
     public HandModel()
     {
         this.New();
@@ -14,6 +16,7 @@ public class HandModel
     public void New()
     {
         hand = new List<CardModel>();
+        selectedCards = new List<CardModel>();
         for (int i = 0; i < size; i++)
         {
             //hand will never not be empty. It will always contain 7 cards of type Empty. Empty is not a real card type, it just signifies that there is no card within that hand slot
@@ -63,6 +66,31 @@ public class HandModel
         return isFull;
     }
 
+    public bool SelectCard(int index)
+    {
+        CardModel card = hand[index];
+        card.selected = !card.selected;
+        if (card.type == Type.Empty)
+        {
+            card.selected = false;
+        }
+        if (card.selected && selectedCards.Count < selectionNum)
+        {
+            selectedCards.Insert(0, card);
+        }
+        else if (card.selected && selectedCards.Count == selectionNum)
+        {
+            selectedCards.Insert(0, card);
+            CardModel removed = selectedCards[selectedCards.Count - 1];
+            selectedCards.RemoveAt(selectedCards.Count - 1);
+            removed.selected = false;
+        }
+        else if (!card.selected)
+        {
+            selectedCards.Remove(card);
+        }
+        return card.selected;
+    }
 
     public CardModel GetCard(int index)
     {

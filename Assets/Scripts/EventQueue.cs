@@ -2,6 +2,7 @@ using System.Collections.Generic;
 public class EventQueue
 {
     private Queue<Event> queue;
+    public bool isPaused = false;
     
     public EventQueue()
     {
@@ -22,16 +23,10 @@ public class EventQueue
         return queue.Count > 0;
     }
 
-    public void Execute(int num = 1)
+    public Event Execute()
     {
-        for (int i = 0 ; i < num; i++)
-        {
-            if (queue.Count > 0)
-            {
-                Event e = queue.Dequeue();
-                e.Execute();
-            }
-
-        }
+        Event e = queue.Dequeue();
+        e.Execute();
+        return e;
     }
 }

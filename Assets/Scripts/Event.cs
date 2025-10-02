@@ -1,9 +1,20 @@
 using System.Collections.Generic;
-using UnityEngine;
+
+
+public enum EventTypes
+{
+    Resource,
+    DrawPile,
+    DiscardPile,
+    DrawCard,
+    DiscardHand,
+    ForceDiscard
+}
 
 public abstract class Event
 {
     protected GameModel game;
+    public EventTypes type;
     public abstract void Execute();
 }
 //TODO: Enemy damage event (AOE, TARGET, RANDOM)
@@ -14,20 +25,21 @@ public abstract class Event
 
 public class ResourceEvent : Event
 {
-    private Type type;
+    private Type resType;
     private int count;
 
     //count can be negative
-    public ResourceEvent(GameModel game, Type type, int count)
+    public ResourceEvent(GameModel game, Type resType, int count)
     {
+        type = EventTypes.Resource;
         this.game = game;
-        this.type = type;
+        this.resType = resType;
         this.count = count;
     }
 
     public override void Execute()
     {
-        game.resourceCount.AddResource(type, count);
+        game.resourceCount.AddResource(resType, count);
     }
 }
 
@@ -39,6 +51,7 @@ public class DrawPileEvent : Event
 
     public DrawPileEvent(GameModel game, CardModel card, bool top = true)
     {
+        type = EventTypes.DrawPile;
         this.game = game;
         this.card = card;
         this.top = top;
@@ -46,6 +59,7 @@ public class DrawPileEvent : Event
 
     public DrawPileEvent(GameModel game, List<CardModel> cards)
     {
+        type = EventTypes.DrawPile;
         this.game = game;
         this.cards = cards;
         this.top = false;
@@ -74,14 +88,16 @@ public class DiscardPileEvent : Event
     private CardModel? card;
     private List<CardModel>? cards;
 
-    public DiscardPileEvent(GameModel game, CardModel card, bool top = true)
+    public DiscardPileEvent(GameModel game, CardModel card)
     {
+        type = EventTypes.DiscardPile;
         this.game = game;
         this.card = card;
     }
 
-    public DiscardPileEvent(GameModel game, List<CardModel> cards, bool top = true)
+    public DiscardPileEvent(GameModel game, List<CardModel> cards)
     {
+        type = EventTypes.DiscardPile;
         this.game = game;
         this.cards = cards;
     }
@@ -105,6 +121,7 @@ public class DrawCardEvent : Event
 
     public DrawCardEvent(GameModel game, int count)
     {
+        type = EventTypes.DrawCard;
         this.game = game;
         this.count = count;
     }
@@ -137,6 +154,7 @@ public class DiscardHandEvent : Event
     
     public DiscardHandEvent(GameModel game)
     {
+        type = EventTypes.DiscardHand;
         this.game = game;
     }
     public override void Execute()
@@ -149,5 +167,20 @@ public class DiscardHandEvent : Event
                 game.discardPile.AddCard(card);
             }
         }
+    }
+}
+
+public class ForceDiscardEvent : Event
+{
+    public int count;
+    public ForceDiscardEvent(GameModel game, int count)
+    {
+        type = EventTypes.ForceDiscard;
+        this.count = count;
+    }
+
+    public override void Execute()
+    {
+
     }
 }

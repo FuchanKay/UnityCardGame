@@ -13,6 +13,8 @@ public class GameView : MonoBehaviour
     public DiscardPileView discardPile;
     public EnemyScreenView enemyScreen;
 
+    public GameObject confirmButton;
+
     void Start()
     {
         Debug.Log("start");
@@ -33,52 +35,71 @@ public class GameView : MonoBehaviour
     }
     public void Reload()
     {
-        hand.Reload(game.hand);
-        resourceCount.Reload(game.resourceCount);
-        drawPile.Reload(game.drawPile);
-        discardPile.Reload(game.discardPile);
+        hand.Reload(game);
+        resourceCount.Reload(game);
+        drawPile.Reload(game);
+        discardPile.Reload(game);
     }
 
     public void DrawCardInput()
     {
         game.DrawCard();
     }
-
+    
     public void DiscardHandInput()
     {
         game.DiscardHand();
     }
+    //TODO: idk if i need 7 methods for this... i think theres a way to pass parameters through buttons but idk how to do it...
+
+    public void Confirm()
+    {
+        Debug.Log("Confirm");
+    }
 
     public void SelectCard1()
     {
-        Debug.Log("Card 1 Selected");
+        bool selected = game.SelectCard(0);
+        hand.SelectCard(0, selected);
+        Reload();
     }
 
     public void SelectCard2()
     {
-        Debug.Log("Card 2 Selected");
+        bool selected = game.SelectCard(1);
+        hand.SelectCard(1, selected);
+        Reload();
     }
     public void SelectCard3()
     {
-
+        bool selected = game.SelectCard(2);
+        hand.SelectCard(2, selected);
+        Reload();
     }
 
     public void SelectCard4()
     {
-
+        bool selected = game.SelectCard(3);
+        hand.SelectCard(3, selected);
+        Reload();
     }
     public void SelectCard5()
     {
-
+        bool selected = game.SelectCard(4);
+        hand.SelectCard(4, selected);
+        Reload();
     }
-
     public void SelectCard6()
     {
-
+        bool selected = game.SelectCard(5);
+        hand.SelectCard(5, selected);
+        Reload();
     }
     public void SelectCard7()
     {
-
+        bool selected = game.SelectCard(6);
+        hand.SelectCard(6, selected);
+        Reload();
     }
 
     public static GameObject CreateCardView(CardModel model)

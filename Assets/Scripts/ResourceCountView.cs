@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 
@@ -16,8 +15,9 @@ public class ResourceCountView : MonoBehaviour
         
     }
 
-    public void Reload(ResourceCountModel RC)
+    public void Reload(GameModel game)
     {
+        ResourceCountModel RC = game.resourceCount;
         TextMeshProUGUI arcaneTMP = arcaneCount.GetComponent<TMPro.TextMeshProUGUI>();
         TextMeshProUGUI hemoTMP = hemoCount.GetComponent<TMPro.TextMeshProUGUI>();
         TextMeshProUGUI holyTMP = holyCount.GetComponent<TMPro.TextMeshProUGUI>();

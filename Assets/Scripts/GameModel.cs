@@ -13,7 +13,7 @@ public class GameModel
     public DiscardPileModel discardPile;
     public HandModel hand;
 
-
+    public Event currentEvent;
     public GameModel()
     {
         this.New();
@@ -57,14 +57,24 @@ public class GameModel
 
     }
 
+    public bool SelectCard(int index)
+    {
+        bool selected = hand.SelectCard(index);
+        return selected;
+    }
+
     public void QueueEvent(Event e)
     {
         eventQueue.QueueEvent(e);
     }
 
-    public void ExecuteEvent(int num = 1)
+    public void ExecuteEvent()
     {
-        eventQueue.Execute(num);
+        currentEvent = eventQueue.Execute();
+        //if (currentEvent.type == EventTypes.ForceDiscard)
+        //{
+
+        //}
     }
 
     public void AddResource(Type type, int count)
@@ -107,10 +117,11 @@ public class GameModel
         Event drawCard = new DrawCardEvent(this, num);
         this.QueueEvent(drawCard);
     }
-
     public void DiscardHand()
     {
         Event discardHand = new DiscardHandEvent(this);
+        //TODO: idk if this is necessary but putting this here jic
+        hand.DeselectAllCards();
         this.QueueEvent(discardHand);
     }
 }
