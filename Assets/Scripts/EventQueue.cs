@@ -14,6 +14,11 @@ public class EventQueue
         queue.Clear();
     }
 
+    public void Pause(bool pause = true)
+    {
+        isPaused = pause;
+    }
+
     public void QueueEvent(Event e) {
         queue.Enqueue(e);
     }

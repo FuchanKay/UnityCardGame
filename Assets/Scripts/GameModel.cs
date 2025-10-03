@@ -2,17 +2,28 @@
  * Access to GameModel allows access to any component of the game.
  */
 using System.Collections.Generic;
-using UnityEngine;
+
+
+public enum Mode
+{
+    Regular,
+    ForceDiscard,
+}
 
 public class GameModel
 {
+
+    public Mode mode = Mode.Regular;
+
     public DeckModel deck;
     public EventQueue eventQueue;
     public ResourceCountModel resourceCount;
     public DrawPileModel drawPile;
     public DiscardPileModel discardPile;
     public HandModel hand;
+    public CardModel lastCardSelected;
 
+    public string description = "";
     public Event currentEvent;
     public GameModel()
     {
@@ -57,16 +68,7 @@ public class GameModel
 
     }
 
-    public bool SelectCard(int index)
-    {
-        bool selected = hand.SelectCard(index);
-        return selected;
-    }
 
-    public void DeselectAllCards()
-    {
-        hand.DeselectAllCards();
-    }
 
     public void QueueEvent(Event e)
     {
@@ -76,10 +78,48 @@ public class GameModel
     public void ExecuteEvent()
     {
         currentEvent = eventQueue.Execute();
-        //if (currentEvent.type == EventTypes.ForceDiscard)
-        //{
+        if (currentEvent.type == EventTypes.ForceDiscard && ((ForceDiscardEvent) currentEvent).count > hand.NonEmptyCount())
+        {
+            var forceDiscardEvent = (ForceDiscardEvent)currentEvent;
+            mode = Mode.ForceDiscard;
+            eventQueue.Pause(true);
+            hand.setSelectionNum(forceDiscardEvent.count);
+        }
+    }
+    public void SelectCard(int index)
+    {
+        hand.SelectCard(index);
+        description = hand.getDescriptionCard().generateDescription();
+    }
 
-        //}
+    public void DeselectAllCards()
+    {
+        hand.DeselectAllCards();
+    }
+
+    public void ForceDiscardAllSelected()
+    {
+        for (int i = 0; i < hand.selectedCards.Count; i++)
+        {
+            var discarded = hand.RemoveCard(hand.selectedCards[i]);
+            discardPile.AddCard(discarded);
+            if (discarded.discard)
+            {
+                //TODO: add when discarded effect
+            }
+        }
+    }
+    public void Confirm()
+    {
+        if (currentEvent.type == EventTypes.ForceDiscard)
+        {
+            var forceDiscardEvent = (ForceDiscardEvent) currentEvent;
+            if (hand.numOfSelectedCards() == forceDiscardEvent.count)
+            {
+                ForceDiscardAllSelected();
+                mode = Mode.Regular;
+            }
+        }
     }
 
     public void AddResource(Type type, int count)
@@ -128,5 +168,11 @@ public class GameModel
         //TODO: idk if this is necessary but putting this here jic
         hand.DeselectAllCards();
         this.QueueEvent(discardHand);
+    }
+
+    public void ForceDiscard(int i)
+    {
+        Event forceDiscard = new ForceDiscardEvent(this, i);
+        this.QueueEvent(forceDiscard);
     }
 }

@@ -11,12 +11,12 @@ public class DiscardPileModel
 
     public void New()
     {
-        discardPile = new List<CardModel>();
+        discardPile = new();
     }
 
     public List<CardModel> Reshuffle()
     {
-        List<CardModel> shuffled = new List<CardModel>();
+        List<CardModel> shuffled = new();
         int size = discardPile.Count;
         for (int i = 0; i < size; i++)
         {

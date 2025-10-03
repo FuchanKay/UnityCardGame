@@ -18,10 +18,10 @@ public class ResourceCountView : MonoBehaviour
     public void Reload(GameModel game)
     {
         ResourceCountModel RC = game.resourceCount;
-        TextMeshProUGUI arcaneTMP = arcaneCount.GetComponent<TMPro.TextMeshProUGUI>();
-        TextMeshProUGUI hemoTMP = hemoCount.GetComponent<TMPro.TextMeshProUGUI>();
-        TextMeshProUGUI holyTMP = holyCount.GetComponent<TMPro.TextMeshProUGUI>();
-        TextMeshProUGUI unholyTMP = unholyCount.GetComponent<TMPro.TextMeshProUGUI>();
+        var arcaneTMP = arcaneCount.GetComponent<TMPro.TextMeshProUGUI>();
+        var hemoTMP = hemoCount.GetComponent<TMPro.TextMeshProUGUI>();
+        var holyTMP = holyCount.GetComponent<TMPro.TextMeshProUGUI>();
+        var unholyTMP = unholyCount.GetComponent<TMPro.TextMeshProUGUI>();
 
         arcaneTMP.text = RC.arcaneCount.ToString();
         hemoTMP.text = RC.hemoCount.ToString();

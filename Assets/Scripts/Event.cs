@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine.XR;
 
 
 public enum EventTypes
@@ -134,6 +136,7 @@ public class DrawCardEvent : Event
             {
                 CardModel card = this.game.drawPile.DrawCard();
                 bool found = this.game.hand.AddCard(card);
+                game.QueueEvent(card.whenDrawn);
                 //TODO: add a visual indicator that hand is full if found is true
             }
             else if (this.game.discardPile.Size() > 0 && !this.game.hand.IsFull())
@@ -142,6 +145,7 @@ public class DrawCardEvent : Event
                 this.game.drawPile.AddCards(shuffled);
                 CardModel card = this.game.drawPile.DrawCard();
                 bool found = this.game.hand.AddCard(card);
+                game.QueueEvent(card.whenDrawn);
                 //TODO: add a visual indicator that hand is full if found is true
             }
         }
@@ -167,6 +171,7 @@ public class DiscardHandEvent : Event
                 game.discardPile.AddCard(card);
             }
         }
+        game.hand.DeselectAllCards();
     }
 }
 
@@ -175,12 +180,18 @@ public class ForceDiscardEvent : Event
     public int count;
     public ForceDiscardEvent(GameModel game, int count)
     {
+        this.game = game;
         type = EventTypes.ForceDiscard;
         this.count = count;
     }
-
     public override void Execute()
     {
-
+        for (int i = 0; count <= game.hand.NonEmptyCount() && game.hand.NonEmptyCount() > 0; i++)
+        {
+            var discarded = game.hand.RemoveCard(game.hand.GetFirstNonEmptyIndex());
+            game.discardPile.AddCard(discarded);
+            //TODO: add when discarded event to this
+        }
     }
 }
+

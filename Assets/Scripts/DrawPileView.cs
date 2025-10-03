@@ -18,7 +18,7 @@ public class DrawPileView : MonoBehaviour
     public void Reload(GameModel game)
     {
         DrawPileModel drawPile = game.drawPile;
-        TextMeshProUGUI tmp = this.GetComponent<TMPro.TextMeshProUGUI>();
+        var tmp = this.GetComponent<TMPro.TextMeshProUGUI>();
         tmp.text = string.Concat(drawPile.Size(), " Cards in the Draw Pile"); 
     }
 

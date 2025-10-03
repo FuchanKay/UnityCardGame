@@ -67,4 +67,18 @@ public class CardModel
         this.whenSwapped = whenSwapped;
         this.swappedDescription = swappedDescription;
     }
+
+    public string generateDescription()
+    {
+        if (type == Type.Empty) return "";
+        string description = string.Concat("When Drawn: Gain ", drawnNum, " ", type.ToString());
+        if (retain)
+        {
+            //TODO: add actual description generator. this will be a PAIN.
+            description = string.Concat(description, "\nWhen Retained: ");
+        }
+        return description;
+    }
+
+
 }

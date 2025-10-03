@@ -2,9 +2,10 @@
 public class HandModel
 {
     public int size = 7;
-    public int selectionNum = 4;
-    List<CardModel> hand;
-    List<CardModel> selectedCards;
+    public int selectionNum = 1;
+    private CardModel descriptionCard;
+    private List<CardModel> hand;
+    public List<CardModel> selectedCards;
     public HandModel()
     {
         this.New();
@@ -14,6 +15,7 @@ public class HandModel
     {
         hand = new List<CardModel>();
         selectedCards = new List<CardModel>();
+        descriptionCard = new CardModel(Type.Empty);
         for (int i = 0; i < size; i++)
         {
             //hand will never not be empty. It will always contain 7 cards of type Empty. Empty is not a real card type, it just signifies that there is no card within that hand slot
@@ -27,6 +29,7 @@ public class HandModel
         {
             hand[i].selected = false;
         }
+        descriptionCard = new CardModel(Type.Empty);
     }
 
     public bool AddCard(CardModel card)
@@ -47,6 +50,19 @@ public class HandModel
             hand[emptyIndex] = card;
         }
         return found;
+    }
+
+    public int NonEmptyCount()
+    {
+        int count = 0;
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (hand[i].type != Type.Empty)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     public bool IsFull()
@@ -74,10 +90,12 @@ public class HandModel
         if (card.selected && selectedCards.Count < selectionNum)
         {
             selectedCards.Insert(0, card);
+            descriptionCard = card;
         }
         else if (card.selected && selectedCards.Count == selectionNum)
         {
             selectedCards.Insert(0, card);
+            descriptionCard = card;
             CardModel removed = selectedCards[selectedCards.Count - 1];
             selectedCards.RemoveAt(selectedCards.Count - 1);
             removed.selected = false;
@@ -86,7 +104,16 @@ public class HandModel
         {
             selectedCards.Remove(card);
         }
+        if (!card.selected && descriptionCard == card)
+        {
+            descriptionCard = new CardModel(Type.Empty);
+        }
         return card.selected;
+    }
+
+    public CardModel getDescriptionCard()
+    {
+        return descriptionCard;
     }
 
     public CardModel GetCard(int index)
@@ -94,11 +121,38 @@ public class HandModel
         return hand[index];
     }
 
+    public int GetFirstNonEmptyIndex()
+    {
+        for (int i = 0; i < hand.Count; i++)
+        {
+            CardModel card = hand[i];
+            if (card.type != Type.Empty)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public CardModel RemoveCard(int index)
     {
-        CardModel card = hand[index];
+        CardModel removed = hand[index];
         hand[index] = new CardModel(Type.Empty);
-        return card;
+        return removed;
+    }
+
+    public CardModel RemoveCard(CardModel card)
+    {
+        var removed  = new CardModel(Type.Empty);
+        for (int i = 0; i < hand.Count; i++)
+        {
+            if (hand[i] == card)
+            {
+                hand[i] = new CardModel(Type.Empty);
+                removed = card;
+            }
+        }
+        return removed;
     }
 
     public void Discard(CardModel card)
@@ -107,4 +161,13 @@ public class HandModel
         return;
     }
 
+    public int numOfSelectedCards()
+    {
+        return selectedCards.Count;
+    }
+
+    public void setSelectionNum(int selectionNum)
+    {
+        this.selectionNum = selectionNum;
+    }
 }

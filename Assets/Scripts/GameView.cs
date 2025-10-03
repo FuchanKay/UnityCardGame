@@ -26,12 +26,24 @@ public class GameView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //this allows for the events to happen in sequential order, but each event happens instantly which should be fixed
-        if (game.eventQueue.HasEvent())
+        //this allows for the events to happen in sequential order, but each event happens instantly which should be changed
+        if (game.eventQueue.HasEvent() && !game.eventQueue.isPaused)
         {
             game.ExecuteEvent();
             //when an event is executed, view is automatically reloaded
             this.Reload();
+        }
+        if (game.mode == Mode.Regular)
+        {
+            confirmButton.SetActive(false);
+        }
+        if (game.mode == Mode.ForceDiscard)
+        {
+            string text = string.Concat("Discard ", game.hand.selectionNum, " Cards");
+            enemyScreen.SetScreenText(text);
+            DeselectAll();
+            confirmButton.SetActive(true);
+            Reload();
         }
     }
     public void Reload()
@@ -40,6 +52,12 @@ public class GameView : MonoBehaviour
         resourceCount.Reload(game);
         drawPile.Reload(game);
         discardPile.Reload(game);
+        enemyScreen.Reload(game);
+    }
+
+    public void ForceDiscard(int i)
+    {
+        game.ForceDiscard(i);
     }
 
     public void DrawCardInput()
@@ -50,69 +68,27 @@ public class GameView : MonoBehaviour
     public void DiscardHandInput()
     {
         game.DiscardHand();
-    }
-    //TODO: idk if i need 7 methods for this... i think theres a way to pass parameters through buttons but idk how to do it...
-
+    } 
     public void DeselectAll()
     {
         game.DeselectAllCards();
-        hand.DeselectAllCards();
         Reload();
     }
     public void Confirm()
     {
-        Debug.Log("Confirm");
-    }
-
-    public void SelectCard1()
-    {
-        bool selected = game.SelectCard(0);
-        hand.SelectCard(0, selected);
+        //TODO: add a visual warning that not all cards are selected
+        game.Confirm();
         Reload();
     }
-
-    public void SelectCard2()
+    public void SelectCard(int index)
     {
-        bool selected = game.SelectCard(1);
-        hand.SelectCard(1, selected);
+        game.SelectCard(index);
         Reload();
     }
-    public void SelectCard3()
-    {
-        bool selected = game.SelectCard(2);
-        hand.SelectCard(2, selected);
-        Reload();
-    }
-
-    public void SelectCard4()
-    {
-        bool selected = game.SelectCard(3);
-        hand.SelectCard(3, selected);
-        Reload();
-    }
-    public void SelectCard5()
-    {
-        bool selected = game.SelectCard(4);
-        hand.SelectCard(4, selected);
-        Reload();
-    }
-    public void SelectCard6()
-    {
-        bool selected = game.SelectCard(5);
-        hand.SelectCard(5, selected);
-        Reload();
-    }
-    public void SelectCard7()
-    {
-        bool selected = game.SelectCard(6);
-        hand.SelectCard(6, selected);
-        Reload();
-    }
-
     public static GameObject CreateCardView(CardModel model)
     {
-        GameObject cardObj = Instantiate(cardPrefab);
-        CardView cardView = cardObj.GetComponent<CardView>();
+        var cardObj = Instantiate(cardPrefab);
+        var cardView = cardObj.GetComponent<CardView>();
         cardView.model = model;
         //cardObj.transform.position = new(200, 200, 0);
         return cardObj;

@@ -19,21 +19,21 @@ public class HandView : MonoBehaviour
         
     }
 
-    public void SelectCard(int index, bool selected)
-    {
-        if (selected)
-        {
-            CardView card = cardViews[index].GetComponent<CardView>();
-            RectTransform rectangle = card.GetComponent<RectTransform>();
-            rectangle.localScale = new Vector3(selectedScale, selectedScale, selectedScale);
-        }
-        else
-        {
-            CardView card = cardViews[index].GetComponent<CardView>();
-            RectTransform rectangle = card.GetComponent<RectTransform>();
-            rectangle.localScale = new Vector3(defaultScale, defaultScale, defaultScale);
-        }
-    }
+    //public void SelectCard(int index, bool selected)
+    //{
+    //    if (selected)
+    //    {
+    //        CardView card = cardViews[index].GetComponent<CardView>();
+    //        RectTransform rectangle = card.GetComponent<RectTransform>();
+    //        rectangle.localScale = new Vector3(selectedScale, selectedScale, selectedScale);
+    //    }
+    //    else
+    //    {
+    //        CardView card = cardViews[index].GetComponent<CardView>();
+    //        RectTransform rectangle = card.GetComponent<RectTransform>();
+    //        rectangle.localScale = new Vector3(defaultScale, defaultScale, defaultScale);
+    //    }
+    //}
 
     public void DeselectAllCards()
     {

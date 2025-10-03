@@ -25,9 +25,9 @@ public class DeckModel
     public CardModel RemoveAny()
     {
         int index = Random.Range(0, deck.Count);
-        CardModel card = deck[index];
+        var cardModel = deck[index];
         deck.RemoveAt(index);
-        return card;
+        return cardModel;
         
     }
     public int Size()
