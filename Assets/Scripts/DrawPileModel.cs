@@ -39,11 +39,20 @@ public class DrawPileModel
     {
         drawPile.Insert(0, card);
     }
-    public void AddCards(List<CardModel> cards)
+    public void AddCardsTop(List<CardModel> cards)
     {
         for (int i = cards.Count - 1; i >= 0; i--)
         {
             drawPile.Insert(0, cards[i]);
+        }
+    }
+
+    public void AddCards(List<CardModel> cards)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            CardModel card = cards[i];
+            AddCardTop(card);
         }
     }
 

@@ -2,19 +2,19 @@
  * Access to GameModel allows access to any component of the game.
  */
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 
 public enum Mode
 {
     Regular,
     ForceDiscard,
+    EnemySelection
 }
 
 public class GameModel
 {
-
     public Mode mode = Mode.Regular;
-
     public DeckModel deck;
     public EventQueue eventQueue;
     public ResourceCountModel resourceCount;
@@ -101,6 +101,7 @@ public class GameModel
     public void DeselectAllCards()
     {
         hand.DeselectAllCards();
+        description = "";
     }
 
     public void ForceDiscardAllSelected()
@@ -123,61 +124,148 @@ public class GameModel
             if (hand.NumOfSelectedCards() == forceDiscardEvent.count)
             {
                 ForceDiscardAllSelected();
+                DeselectAllCards();
                 SwitchMode(Mode.Regular);
+                description = "";
             }
         }
     }
-
-    public void AddResource(Type type, int count)
+    //Methods ending with Q will queue the event into event queue
+    public void AddResourceQ(Type type, int count)
     {
         Event addResourceEvent = new ResourceEvent(this, type, count);
         this.QueueEvent(addResourceEvent);
     }
-
-    public void AddCardToTopOfDrawPile(CardModel card)
+    public void AddResource(Type type, int count)
     {
-        Event addCardToTopOfDrawPile = new DrawPileEvent(this, card);
-        this.QueueEvent(addCardToTopOfDrawPile);
+
     }
-
-    public void AddCardToDrawPile(CardModel card)
+    public void AddCardToDrawPileQ(CardModel card, bool top)
     {
-        Event addCardToDrawPile = new DrawPileEvent(this, card, false);
+        Event addCardToDrawPile = new DrawPileEvent(this, card, top);
         this.QueueEvent(addCardToDrawPile);
     }
 
-    public void AddCardsToDrawPile(List<CardModel> cards)
+    public void AddCardToDrawPile(CardModel card, bool top)
     {
-        Event addCardsToDrawPile = new DrawPileEvent(this, cards);
+        if (top)
+        {
+            drawPile.AddCardTop(card);
+        }
+        else
+        {
+            drawPile.AddCard(card);
+        }
+    }
+
+    public void AddCardsToDrawPileQ(List<CardModel> cards)
+    {
+        Event addCardsToDrawPile = new DrawPileEvent(this, cards, true);
         this.QueueEvent(addCardsToDrawPile);
     }
 
-    public void AddCardToDiscardPile(CardModel card)
+    public void AddCardsToDrawPile(List<CardModel> cards, bool top)
+    {
+        if (top)
+        {
+            drawPile.AddCardsTop(cards);
+        }
+        else
+        {
+            drawPile.AddCards(cards);
+        }
+    }
+
+    public void AddCardToDiscardPileQ(CardModel card)
     {
         Event addCardToDiscardPile = new DiscardPileEvent(this, card);
         this.QueueEvent(addCardToDiscardPile);
     }
 
-    public void AddCardsToDiscardPile(List<CardModel> cards)
+    public void AddCardToDiscardPile(CardModel card)
+    {
+        discardPile.AddCard(card);
+    }
+
+    public void AddCardsToDiscardPileQ(List<CardModel> cards)
     {
         Event addCardsToDiscardPile = new DiscardPileEvent(this, cards);
         this.QueueEvent(addCardsToDiscardPile);
     }
-    public void DrawCard(int num = 1)
+
+    public void AddCardsToDiscardPile(List<CardModel> cards)
+    {
+        discardPile.AddCards(cards);
+    }
+
+    public void DrawCardQ(int num = 1)
     {
         Event drawCard = new DrawCardEvent(this, num);
         this.QueueEvent(drawCard);
     }
-    public void DiscardHand()
+
+    public void DrawCard(int count = 1)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            if (drawPile.Size() > 0 && !hand.IsFull())
+            {
+                CardModel card = this.drawPile.DrawCard();
+                bool found = this.hand.AddCard(card);
+                card.whenDrawn.Execute();
+                //TODO: add a visual indicator that hand is full if found is true
+            }
+            else if (discardPile.Size() > 0 && !hand.IsFull())
+            {
+                List<CardModel> shuffled = discardPile.Reshuffle();
+                drawPile.AddCards(shuffled);
+                CardModel card = this.drawPile.DrawCard();
+                bool found = this.hand.AddCard(card);
+                card.whenDrawn.Execute();
+                //TODO: add a visual indicator that hand is full if found is true
+            }
+        }
+    }
+    public void DiscardHandQ()
     {
         Event discardHand = new DiscardHandEvent(this);
         //TODO: idk if this is necessary but putting this here jic
         this.QueueEvent(discardHand);
     }
 
-    public void ForceDiscard(int i)
+    public void DiscardHand()
     {
-        Event forceDiscard = new ForceDiscardEvent(this, i);
+        for (int i = 0; i < hand.size; i++)
+        {
+            CardModel card = hand.RemoveCard(i);
+            if (card.type != Type.Empty)
+            {
+                discardPile.AddCard(card);
+            }
+        }
+        hand.DeselectAllCards();
+    }
+
+
+    public void ForceDiscardQ(int num = 1)
+    {
+        Event forceDiscard = new ForceDiscardEvent(this, num);
         this.QueueEvent(forceDiscard);
+    }
+
+    public void ForceDiscard(int count)
+    {
+        DeselectAllCards();
+        for (int i = 0; count >= hand.NonEmptyCount() && hand.NonEmptyCount() > 0; i++)
+        {
+            var discarded = hand.RemoveCard(hand.GetFirstNonEmptyIndex());
+            discardPile.AddCard(discarded);
+            //TODO: add when discarded event to this
+        }
+        if (count < hand.NonEmptyCount())
+        {
+            SwitchMode(Mode.ForceDiscard);
+            SetSelectionNum(count);
+        }
     }
 }

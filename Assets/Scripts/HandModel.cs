@@ -29,6 +29,10 @@ public class HandModel
         {
             hand[i].selected = false;
         }
+        for (int i = 0; i < selectedCards.Count; i++)
+        {
+            selectedCards.RemoveAt(i);
+        }
         descriptionCard = new CardModel(Type.Empty);
     }
 

@@ -18,7 +18,7 @@ public class DiscardPileView : MonoBehaviour
     public void Reload(GameModel game)
     {
         var discardPileModel = game.discardPile;
-        var tmp = this.GetComponent<TMPro.TextMeshProUGUI>();
+        var tmp = GetComponent<TMPro.TextMeshProUGUI>();
         tmp.text = string.Concat(discardPileModel.Size(), " Cards in the Discard Pile");
     }
 

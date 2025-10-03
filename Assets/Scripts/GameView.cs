@@ -38,7 +38,7 @@ public class GameView : MonoBehaviour
             confirmButton.SetActive(false);
             enemyScreen.SetScreenText("");
         }
-        if (game.mode == Mode.ForceDiscard)
+        else if (game.mode == Mode.ForceDiscard)
         {
             string text = string.Concat("Discard ", game.hand.selectionCount, " Cards");
             enemyScreen.SetScreenText(text);
@@ -57,17 +57,17 @@ public class GameView : MonoBehaviour
 
     public void ForceDiscard(int i)
     {
-        game.ForceDiscard(i);
+        game.ForceDiscardQ(i);
     }
 
     public void DrawCardInput()
     {
-        game.DrawCard();
+        game.DrawCardQ();
     }
     
     public void DiscardHandInput()
     {
-        game.DiscardHand();
+        game.DiscardHandQ();
     } 
     public void DeselectAll()
     {

@@ -41,7 +41,7 @@ public class ResourceEvent : Event
 
     public override void Execute()
     {
-        game.resourceCount.AddResource(resType, count);
+        game.AddResource(resType, count);
     }
 }
 
@@ -59,27 +59,23 @@ public class DrawPileEvent : Event
         this.top = top;
     }
 
-    public DrawPileEvent(GameModel game, List<CardModel> cards)
+    public DrawPileEvent(GameModel game, List<CardModel> cards, bool top)
     {
         type = EventTypes.DrawPile;
         this.game = game;
         this.cards = cards;
-        this.top = false;
+        this.top = top;
     }
 
     public override void Execute()
     {
-        if (card != null && top)
+        if (card != null)
         {
-            this.game.drawPile.AddCardTop(card);
-        }
-        else if (card != null && !top)
-        {
-            this.game.drawPile.AddCard(card);
+            this.game.AddCardToDrawPile(card, top);
         }
         else if (cards != null)
         {
-            this.game.drawPile.AddCards(cards);
+            this.game.AddCardsToDrawPile(cards, top);
         }
     }
 }
@@ -107,11 +103,11 @@ public class DiscardPileEvent : Event
     {
         if (card != null)
         {
-            this.game.discardPile.AddCard(card);
+            this.game.AddCardToDiscardPile(card);
         }
         else if (cards != null)
         {
-            this.game.discardPile.AddCards(cards);
+            this.game.AddCardsToDiscardPile(cards);
         }
     }
 }
@@ -129,26 +125,7 @@ public class DrawCardEvent : Event
 
     public override void Execute()
     {
-        for (int i = 0; i < count; i++)
-        {
-            if (this.game.drawPile.Size() > 0 && !this.game.hand.IsFull())
-            {
-                CardModel card = this.game.drawPile.DrawCard();
-                bool found = this.game.hand.AddCard(card);
-                game.QueueEvent(card.whenDrawn);
-                //TODO: add a visual indicator that hand is full if found is true
-            }
-            else if (this.game.discardPile.Size() > 0 && !this.game.hand.IsFull())
-            {
-                List<CardModel> shuffled = this.game.discardPile.Reshuffle();
-                this.game.drawPile.AddCards(shuffled);
-                CardModel card = this.game.drawPile.DrawCard();
-                bool found = this.game.hand.AddCard(card);
-                game.QueueEvent(card.whenDrawn);
-                //TODO: add a visual indicator that hand is full if found is true
-            }
-        }
-
+        game.DrawCard(count);
     }
 }
 
@@ -162,15 +139,7 @@ public class DiscardHandEvent : Event
     }
     public override void Execute()
     {
-        for (int i = 0; i < game.hand.size; i++)
-        {
-            CardModel card = game.hand.RemoveCard(i);
-            if (card.type != Type.Empty)
-            {
-                game.discardPile.AddCard(card);
-            }
-        }
-        game.hand.DeselectAllCards();
+        game.DiscardHand();
     }
 }
 
@@ -185,19 +154,7 @@ public class ForceDiscardEvent : Event
     }
     public override void Execute()
     {
-        game.DeselectAllCards();
-        for (int i = 0; count >= game.hand.NonEmptyCount() && game.hand.NonEmptyCount() > 0; i++)
-        {
-            var discarded = game.hand.RemoveCard(game.hand.GetFirstNonEmptyIndex());
-            game.discardPile.AddCard(discarded);
-            //TODO: add when discarded event to this
-        }
-        if (count < game.hand.NonEmptyCount())
-        {
-            game.SwitchMode(Mode.ForceDiscard);
-            game.SetSelectionNum(count);
-        }
-
+        game.ForceDiscard(count);
     }
 }
 

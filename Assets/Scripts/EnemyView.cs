@@ -14,6 +14,4 @@ public class EnemyView : MonoBehaviour
     {
         
     }
-
-
 }
