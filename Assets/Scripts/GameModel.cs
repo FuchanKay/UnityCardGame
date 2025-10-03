@@ -65,31 +65,37 @@ public class GameModel
         resourceCount.AddResource(Type.Hemo, 12);
         resourceCount.AddResource(Type.Holy, 13);
         resourceCount.AddResource(Type.Unholy, 14);
-
     }
-
-
-
     public void QueueEvent(Event e)
     {
         eventQueue.QueueEvent(e);
     }
-
     public void ExecuteEvent()
     {
         currentEvent = eventQueue.Execute();
-        if (currentEvent.type == EventTypes.ForceDiscard && ((ForceDiscardEvent) currentEvent).count > hand.NonEmptyCount())
+    }
+
+    public void SetSelectionNum(int count)
+    {
+        hand.SetSelectionCount(count);
+    }
+
+    public void SwitchMode(Mode mode)
+    {
+        this.mode = mode;
+        if (mode == Mode.ForceDiscard)
         {
-            var forceDiscardEvent = (ForceDiscardEvent)currentEvent;
-            mode = Mode.ForceDiscard;
             eventQueue.Pause(true);
-            hand.setSelectionNum(forceDiscardEvent.count);
+        }
+        else if (mode == Mode.Regular)
+        {
+            eventQueue.Pause(false);
         }
     }
     public void SelectCard(int index)
     {
         hand.SelectCard(index);
-        description = hand.getDescriptionCard().generateDescription();
+        description = hand.GetDescriptionCard().generateDescription();
     }
 
     public void DeselectAllCards()
@@ -114,10 +120,10 @@ public class GameModel
         if (currentEvent.type == EventTypes.ForceDiscard)
         {
             var forceDiscardEvent = (ForceDiscardEvent) currentEvent;
-            if (hand.numOfSelectedCards() == forceDiscardEvent.count)
+            if (hand.NumOfSelectedCards() == forceDiscardEvent.count)
             {
                 ForceDiscardAllSelected();
-                mode = Mode.Regular;
+                SwitchMode(Mode.Regular);
             }
         }
     }
@@ -166,7 +172,6 @@ public class GameModel
     {
         Event discardHand = new DiscardHandEvent(this);
         //TODO: idk if this is necessary but putting this here jic
-        hand.DeselectAllCards();
         this.QueueEvent(discardHand);
     }
 

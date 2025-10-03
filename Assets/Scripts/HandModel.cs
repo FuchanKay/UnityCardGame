@@ -2,7 +2,7 @@
 public class HandModel
 {
     public int size = 7;
-    public int selectionNum = 1;
+    public int selectionCount = 1;
     private CardModel descriptionCard;
     private List<CardModel> hand;
     public List<CardModel> selectedCards;
@@ -87,12 +87,12 @@ public class HandModel
         {
             card.selected = false;
         }
-        if (card.selected && selectedCards.Count < selectionNum)
+        if (card.selected && selectedCards.Count < selectionCount)
         {
             selectedCards.Insert(0, card);
             descriptionCard = card;
         }
-        else if (card.selected && selectedCards.Count == selectionNum)
+        else if (card.selected && selectedCards.Count == selectionCount)
         {
             selectedCards.Insert(0, card);
             descriptionCard = card;
@@ -111,7 +111,7 @@ public class HandModel
         return card.selected;
     }
 
-    public CardModel getDescriptionCard()
+    public CardModel GetDescriptionCard()
     {
         return descriptionCard;
     }
@@ -161,13 +161,13 @@ public class HandModel
         return;
     }
 
-    public int numOfSelectedCards()
+    public int NumOfSelectedCards()
     {
         return selectedCards.Count;
     }
 
-    public void setSelectionNum(int selectionNum)
+    public void SetSelectionCount(int selectionCount)
     {
-        this.selectionNum = selectionNum;
+        this.selectionCount = selectionCount;
     }
 }

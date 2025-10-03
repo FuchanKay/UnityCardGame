@@ -36,12 +36,12 @@ public class GameView : MonoBehaviour
         if (game.mode == Mode.Regular)
         {
             confirmButton.SetActive(false);
+            enemyScreen.SetScreenText("");
         }
         if (game.mode == Mode.ForceDiscard)
         {
-            string text = string.Concat("Discard ", game.hand.selectionNum, " Cards");
+            string text = string.Concat("Discard ", game.hand.selectionCount, " Cards");
             enemyScreen.SetScreenText(text);
-            DeselectAll();
             confirmButton.SetActive(true);
             Reload();
         }

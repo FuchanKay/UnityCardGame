@@ -81,7 +81,6 @@ public class DrawPileEvent : Event
         {
             this.game.drawPile.AddCards(cards);
         }
-
     }
 }
 
@@ -186,12 +185,19 @@ public class ForceDiscardEvent : Event
     }
     public override void Execute()
     {
-        for (int i = 0; count <= game.hand.NonEmptyCount() && game.hand.NonEmptyCount() > 0; i++)
+        game.DeselectAllCards();
+        for (int i = 0; count >= game.hand.NonEmptyCount() && game.hand.NonEmptyCount() > 0; i++)
         {
             var discarded = game.hand.RemoveCard(game.hand.GetFirstNonEmptyIndex());
             game.discardPile.AddCard(discarded);
             //TODO: add when discarded event to this
         }
+        if (count < game.hand.NonEmptyCount())
+        {
+            game.SwitchMode(Mode.ForceDiscard);
+            game.SetSelectionNum(count);
+        }
+
     }
 }
 
