@@ -11,7 +11,8 @@ public enum EventType
     DrawCard,
     DiscardHand,
     ForceDiscard,
-    Swap
+    Swap,
+    EnemySelect,
 }
 
 public abstract class Event
@@ -179,6 +180,19 @@ public class SwapEvent : Event
     public override void Execute()
     {
         game.SwapCards();
+    }
+}
+
+public class SelectEnemyEvent : Event
+{
+    public SelectEnemyEvent(GameModel game)
+    {
+        this.game = game;
+    }
+
+    public override void Execute()
+    {
+        game.SelectEnemy();
     }
 }
 
