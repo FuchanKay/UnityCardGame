@@ -3,9 +3,13 @@ public class HandModel
 {
     public int size = 7;
     public int selectionCount = 1;
-    private CardModel descriptionCard;
+    public CardModel descriptionCard;
     private List<CardModel> hand;
+
     public List<CardModel> selectedCards;
+
+    public List<CardModel> discardedCards;
+
     public HandModel()
     {
         this.New();
@@ -159,10 +163,14 @@ public class HandModel
         return removed;
     }
 
-    public void Discard(CardModel card)
+    public void Discard(List<CardModel> cards)
     {
-        //TODO: idk
-        return;
+        discardedCards = cards;
+        for (int i = 0; i < cards.Count; i++)
+        {
+            CardModel card = cards[i];
+            RemoveCard(card);
+        }
     }
 
     public int NumOfSelectedCards()

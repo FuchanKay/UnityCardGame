@@ -23,7 +23,7 @@ public class CardView : MonoBehaviour
     void Start()
     {
         this.model = new(Type.Empty);
-        this.UpdateModel(model);
+        this.UpdateView(model);
     }
 
     // Update is called once per frame
@@ -32,7 +32,7 @@ public class CardView : MonoBehaviour
 
     }
 
-    public void UpdateModel(CardModel model)
+    public void UpdateView(CardModel model)
     {
         this.model = model;
         var runeImg = rune.GetComponent<Image>();

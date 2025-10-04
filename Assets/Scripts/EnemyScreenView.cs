@@ -6,6 +6,7 @@ public class EnemyScreenView : MonoBehaviour
     public GameObject descriptionBox;
     public GameObject descriptionBoxBG;
     public GameObject screenText;
+    public GameObject darken;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

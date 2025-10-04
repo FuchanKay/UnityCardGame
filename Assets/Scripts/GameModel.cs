@@ -2,13 +2,14 @@
  * Access to GameModel allows access to any component of the game.
  */
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine;
 
 
 public enum Mode
 {
     Regular,
     ForceDiscard,
+    Swap,
     EnemySelection
 }
 
@@ -38,7 +39,6 @@ public class GameModel
         drawPile = new DrawPileModel();
         discardPile = new DiscardPileModel();
         hand = new HandModel();
-
         //original deck for now
         deck.AddCard(new CardModel(Type.Arcane, Letter.A, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
         deck.AddCard(new CardModel(Type.Hemo, Letter.B, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
@@ -56,15 +56,8 @@ public class GameModel
         deck.AddCard(new CardModel(Type.Hemo, Letter.F, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
         deck.AddCard(new CardModel(Type.Holy, Letter.G, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
         deck.AddCard(new CardModel(Type.Unholy, Letter.H, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
-
         //adds deck to draw pile
         drawPile.AddDeck(deck);
-
-        //test resource count for now
-        resourceCount.AddResource(Type.Arcane, 11);
-        resourceCount.AddResource(Type.Hemo, 12);
-        resourceCount.AddResource(Type.Holy, 13);
-        resourceCount.AddResource(Type.Unholy, 14);
     }
     public void QueueEvent(Event e)
     {
@@ -97,28 +90,30 @@ public class GameModel
         hand.SelectCard(index);
         description = hand.GetDescriptionCard().generateDescription();
     }
-
     public void DeselectAllCards()
     {
         hand.DeselectAllCards();
         description = "";
     }
-
     public void ForceDiscardAllSelected()
     {
+        hand.Discard(hand.selectedCards);
+        discardPile.AddCards(hand.selectedCards);
         for (int i = 0; i < hand.selectedCards.Count; i++)
         {
-            var discarded = hand.RemoveCard(hand.selectedCards[i]);
-            discardPile.AddCard(discarded);
+            //TODO: i feel like this bug is really prone to bugs. if there is a problem with hand good chance its here
+            CardModel discarded = hand.selectedCards[i];
+
             if (discarded.discard)
             {
                 //TODO: add when discarded effect
             }
         }
+        Debug.Log(hand.discardedCards.Count);
     }
     public void Confirm()
     {
-        if (currentEvent.type == EventTypes.ForceDiscard)
+        if (currentEvent.type == EventType.ForceDiscard)
         {
             var forceDiscardEvent = (ForceDiscardEvent) currentEvent;
             if (hand.NumOfSelectedCards() == forceDiscardEvent.count)
@@ -126,11 +121,13 @@ public class GameModel
                 ForceDiscardAllSelected();
                 DeselectAllCards();
                 SwitchMode(Mode.Regular);
+                hand.SetSelectionCount(1);
                 description = "";
             }
         }
     }
     //Methods ending with Q will queue the event into event queue
+    //Methods not ending with Q will execute instantly
     public void AddResourceQ(Type type, int count)
     {
         Event addResourceEvent = new ResourceEvent(this, type, count);
@@ -138,14 +135,13 @@ public class GameModel
     }
     public void AddResource(Type type, int count)
     {
-
+        resourceCount.AddResource(type, count);
     }
     public void AddCardToDrawPileQ(CardModel card, bool top)
     {
         Event addCardToDrawPile = new DrawPileEvent(this, card, top);
         this.QueueEvent(addCardToDrawPile);
     }
-
     public void AddCardToDrawPile(CardModel card, bool top)
     {
         if (top)
@@ -157,7 +153,6 @@ public class GameModel
             drawPile.AddCard(card);
         }
     }
-
     public void AddCardsToDrawPileQ(List<CardModel> cards)
     {
         Event addCardsToDrawPile = new DrawPileEvent(this, cards, true);
@@ -175,7 +170,6 @@ public class GameModel
             drawPile.AddCards(cards);
         }
     }
-
     public void AddCardToDiscardPileQ(CardModel card)
     {
         Event addCardToDiscardPile = new DiscardPileEvent(this, card);
@@ -186,7 +180,6 @@ public class GameModel
     {
         discardPile.AddCard(card);
     }
-
     public void AddCardsToDiscardPileQ(List<CardModel> cards)
     {
         Event addCardsToDiscardPile = new DiscardPileEvent(this, cards);
@@ -220,7 +213,7 @@ public class GameModel
                 List<CardModel> shuffled = discardPile.Reshuffle();
                 drawPile.AddCards(shuffled);
                 CardModel card = this.drawPile.DrawCard();
-                bool found = this.hand.AddCard(card);
+                hand.AddCard(card);
                 card.whenDrawn.Execute();
                 //TODO: add a visual indicator that hand is full if found is true
             }
@@ -245,27 +238,57 @@ public class GameModel
         }
         hand.DeselectAllCards();
     }
-
-
     public void ForceDiscardQ(int num = 1)
     {
         Event forceDiscard = new ForceDiscardEvent(this, num);
         this.QueueEvent(forceDiscard);
     }
-
     public void ForceDiscard(int count)
     {
         DeselectAllCards();
-        for (int i = 0; count >= hand.NonEmptyCount() && hand.NonEmptyCount() > 0; i++)
-        {
-            var discarded = hand.RemoveCard(hand.GetFirstNonEmptyIndex());
-            discardPile.AddCard(discarded);
-            //TODO: add when discarded event to this
-        }
+
         if (count < hand.NonEmptyCount())
         {
             SwitchMode(Mode.ForceDiscard);
             SetSelectionNum(count);
         }
+        else
+        {
+            List<CardModel> toDiscard = new();
+
+            for (int i = 0; i < hand.NonEmptyCount(); i++)
+            {
+                CardModel card = hand.GetCard(hand.GetFirstNonEmptyIndex());
+                toDiscard.Add(card);
+            }
+
+            for (int i = 0; count >= hand.NonEmptyCount() && hand.NonEmptyCount() > 0; i++)
+            {
+                //var discarded = hand.Discard(hand.GetFirstNonEmptyIndex());
+                discardPile.AddCard(discarded);
+                //TODO: add when discarded event to this
+            }
+        }
+    }
+    public void SelectEnemyQ()
+    {
+        //Event selectEnemy = new SelectEnemyEvent(this);
+        //this.QueueEvent(selectEnemy);
+    }
+
+    public void SelectEnemy()
+    {
+
+    }
+
+    public void SwapCardsQ()
+    {
+        Event swap = new SwapEvent(this);
+        this.QueueEvent(swap);
+    }
+
+    public void SwapCards()
+    {
+        //TODO: SWAP
     }
 }

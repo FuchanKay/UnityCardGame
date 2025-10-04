@@ -36,12 +36,14 @@ public class GameView : MonoBehaviour
         if (game.mode == Mode.Regular)
         {
             confirmButton.SetActive(false);
+            enemyScreen.darken.SetActive(false);
             enemyScreen.SetScreenText("");
         }
         else if (game.mode == Mode.ForceDiscard)
         {
             string text = string.Concat("Discard ", game.hand.selectionCount, " Cards");
             enemyScreen.SetScreenText(text);
+            enemyScreen.darken.SetActive(true);
             confirmButton.SetActive(true);
             Reload();
         }
@@ -68,7 +70,13 @@ public class GameView : MonoBehaviour
     public void DiscardHandInput()
     {
         game.DiscardHandQ();
-    } 
+    }
+
+    public void SelectEnemy()
+    {
+        game.SelectEnemyQ();
+    }
+
     public void DeselectAll()
     {
         game.DeselectAllCards();
@@ -80,6 +88,8 @@ public class GameView : MonoBehaviour
         game.Confirm();
         Reload();
     }
+
+
     public void SelectCard(int index)
     {
         game.SelectCard(index);

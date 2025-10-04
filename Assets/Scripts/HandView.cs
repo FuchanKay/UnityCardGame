@@ -39,7 +39,7 @@ public class HandView : MonoBehaviour
                 rectangle.localScale = new Vector3(defaultScale, defaultScale, defaultScale);
             }
 
-            cardView.UpdateModel(cardModel);
+            cardView.UpdateView(cardModel);
         }
     }
 } 

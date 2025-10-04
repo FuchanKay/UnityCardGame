@@ -35,7 +35,7 @@ public class DiscardPileModel
 
     public void AddCards(List<CardModel> cards)
     {
-        for (int i = 0; i <= cards.Count; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
             CardModel card = cards[i];
             discardPile.Add(card);
