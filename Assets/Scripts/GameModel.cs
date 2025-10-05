@@ -254,11 +254,16 @@ public class GameModel
         }
         else
         {
+<<<<<<< HEAD
             List<CardModel> toDiscard = new();
+=======
+            List<CardModel> cardsToDiscard = new();
+>>>>>>> parent of 20e1499 (Added enemy instantiation as well as other things)
 
             for (int i = 0; i < hand.NonEmptyCount(); i++)
             {
                 CardModel card = hand.GetCard(hand.GetFirstNonEmptyIndex());
+<<<<<<< HEAD
                 toDiscard.Add(card);
             }
 
@@ -267,6 +272,9 @@ public class GameModel
                 //var discarded = hand.Discard(hand.GetFirstNonEmptyIndex());
                 discardPile.AddCard(discarded);
                 //TODO: add when discarded event to this
+=======
+                cardsToDiscard.Add(card);
+>>>>>>> parent of 20e1499 (Added enemy instantiation as well as other things)
             }
         }
     }
