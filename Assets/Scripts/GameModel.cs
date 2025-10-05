@@ -123,14 +123,7 @@ public class GameModel
                 SwitchMode(Mode.Regular);
                 hand.SetSelectionCount(1);
                 description = "";
-            } else
-            {
-                //TODO: Not enough cards selected!
             }
-        }
-        else if (currentEvent.type == EventType.EnemySelect)
-        {
-
         }
     }
     //Methods ending with Q will queue the event into event queue
@@ -261,28 +254,30 @@ public class GameModel
         }
         else
         {
-            List<CardModel> cardsToDiscard = new();
+            List<CardModel> toDiscard = new();
 
             for (int i = 0; i < hand.NonEmptyCount(); i++)
             {
                 CardModel card = hand.GetCard(hand.GetFirstNonEmptyIndex());
-                cardsToDiscard.Add(card);
+                toDiscard.Add(card);
             }
-            hand.Discard(cardsToDiscard);
-            Debug.Log(hand.discardedCards.Count);
+
+            for (int i = 0; count >= hand.NonEmptyCount() && hand.NonEmptyCount() > 0; i++)
+            {
+                //var discarded = hand.Discard(hand.GetFirstNonEmptyIndex());
+                discardPile.AddCard(discarded);
+                //TODO: add when discarded event to this
+            }
         }
     }
     public void SelectEnemyQ()
     {
-        Event selectEnemy = new SelectEnemyEvent(this);
-        this.QueueEvent(selectEnemy);
+        //Event selectEnemy = new SelectEnemyEvent(this);
+        //this.QueueEvent(selectEnemy);
     }
 
     public void SelectEnemy()
     {
-        
-
-
 
     }
 
