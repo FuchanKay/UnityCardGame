@@ -201,8 +201,8 @@ public class GameModel
 
     public void AddEnemyQ()
     {
-        //TODO: make this actually Q
-        enemyScreen.AddEnemy(new SkellyEnemy(enemyScreen.NumberOfEnemies() + 1));
+        Event addEnemy = new AddEnemyEvent(this, new SkellyEnemy(enemyScreen.NumberOfEnemies() + 1));
+        this.QueueEvent(addEnemy);
     }
 
     public void AddEnemy(EnemyModel enemy)

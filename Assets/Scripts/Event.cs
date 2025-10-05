@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine.XR;
+using UnityEngine;
 
 
 public enum EventType
@@ -11,7 +10,9 @@ public enum EventType
     DrawCard,
     DiscardHand,
     ForceDiscard,
-    Swap
+    Swap,
+    SelectEnemy,
+    AddEnemy
 }
 
 public abstract class Event
@@ -187,6 +188,7 @@ public class SelectEnemyEvent : Event
     public SelectEnemyEvent(GameModel game)
     {
         this.game = game;
+        type = EventType.SelectEnemy;
     }
 
     public override void Execute()
@@ -197,10 +199,12 @@ public class SelectEnemyEvent : Event
 
 public class AddEnemyEvent : Event
 {
-    EnemyModel enemy;
+    public EnemyModel enemy;
     public AddEnemyEvent(GameModel game, EnemyModel enemy)
     {
+        this.game = game;
         this.enemy = enemy;
+        type = EventType.AddEnemy;
     }
 
     public override void Execute()
