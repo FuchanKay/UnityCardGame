@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class HandView : MonoBehaviour
 {
-    private const float selectedScale = 0.24f;
-    private const float defaultScale = 0.2f;
+    private const float selectedScale = 0.085f;
+    private const float defaultScale = 0.07f;
     public List<GameObject> cardViews;
     void Start()
     {

@@ -62,6 +62,11 @@ public class GameView : MonoBehaviour
         game.ForceDiscardQ(i);
     }
 
+    public void AddEnemy()
+    {
+        game.AddEnemyQ();
+    }
+
     public void DrawCardInput()
     {
         game.DrawCardQ();

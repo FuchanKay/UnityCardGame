@@ -182,3 +182,30 @@ public class SwapEvent : Event
     }
 }
 
+public class SelectEnemyEvent : Event
+{
+    public SelectEnemyEvent(GameModel game)
+    {
+        this.game = game;
+    }
+
+    public override void Execute()
+    {
+        game.SelectEnemy();
+    }
+}
+
+public class AddEnemyEvent : Event
+{
+    EnemyModel enemy;
+    public AddEnemyEvent(GameModel game, EnemyModel enemy)
+    {
+        this.enemy = enemy;
+    }
+
+    public override void Execute()
+    {
+        game.AddEnemy(enemy);
+    }
+
+}

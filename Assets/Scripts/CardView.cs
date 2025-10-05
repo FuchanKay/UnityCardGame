@@ -18,11 +18,14 @@ public class CardView : MonoBehaviour
     public GameObject text;
     public GameObject body;
 
+    public GameObject hand;
+
     private string letter;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         this.model = new(Type.Empty);
+        this.transform.SetParent(hand.transform);
         this.UpdateView(model);
     }
 

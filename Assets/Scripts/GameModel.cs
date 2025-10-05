@@ -24,6 +24,8 @@ public class GameModel
     public HandModel hand;
     public CardModel lastCardSelected;
 
+    public EnemyScreenModel enemyScreen;
+
     public string description = "";
     public Event currentEvent;
     public GameModel()
@@ -33,12 +35,15 @@ public class GameModel
 
     public void New()
     {
+        // just in case
+        mode = Mode.Regular;
         deck = new DeckModel();
         eventQueue = new EventQueue();
         resourceCount = new ResourceCountModel();
         drawPile = new DrawPileModel();
         discardPile = new DiscardPileModel();
         hand = new HandModel();
+        enemyScreen = new EnemyScreenModel();
         //original deck for now
         deck.AddCard(new CardModel(Type.Arcane, Letter.A, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
         deck.AddCard(new CardModel(Type.Hemo, Letter.B, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
@@ -58,6 +63,9 @@ public class GameModel
         deck.AddCard(new CardModel(Type.Unholy, Letter.H, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
         //adds deck to draw pile
         drawPile.AddDeck(deck);
+
+        enemyScreen.AddEnemy(new SkellyEnemy(1));
+        enemyScreen.AddEnemy(new SkellyEnemy(2));
     }
     public void QueueEvent(Event e)
     {
@@ -191,6 +199,17 @@ public class GameModel
         discardPile.AddCards(cards);
     }
 
+    public void AddEnemyQ()
+    {
+        //TODO: make this actually Q
+        enemyScreen.AddEnemy(new SkellyEnemy(enemyScreen.NumberOfEnemies() + 1));
+    }
+
+    public void AddEnemy(EnemyModel enemy)
+    {
+        enemyScreen.AddEnemy(enemy);
+    }
+
     public void DrawCardQ(int num = 1)
     {
         Event drawCard = new DrawCardEvent(this, num);
@@ -254,28 +273,12 @@ public class GameModel
         }
         else
         {
-<<<<<<< HEAD
-            List<CardModel> toDiscard = new();
-=======
             List<CardModel> cardsToDiscard = new();
->>>>>>> parent of 20e1499 (Added enemy instantiation as well as other things)
-
-            for (int i = 0; i < hand.NonEmptyCount(); i++)
+            for (int i = 0; i < hand.size; i++)
             {
-                CardModel card = hand.GetCard(hand.GetFirstNonEmptyIndex());
-<<<<<<< HEAD
-                toDiscard.Add(card);
+                if (hand.GetCard(i).type != Type.Empty) cardsToDiscard.Add(hand.GetCard(i));
             }
-
-            for (int i = 0; count >= hand.NonEmptyCount() && hand.NonEmptyCount() > 0; i++)
-            {
-                //var discarded = hand.Discard(hand.GetFirstNonEmptyIndex());
-                discardPile.AddCard(discarded);
-                //TODO: add when discarded event to this
-=======
-                cardsToDiscard.Add(card);
->>>>>>> parent of 20e1499 (Added enemy instantiation as well as other things)
-            }
+            hand.Discard(cardsToDiscard);
         }
     }
     public void SelectEnemyQ()
@@ -284,7 +287,7 @@ public class GameModel
         //this.QueueEvent(selectEnemy);
     }
 
-    public void SelectEnemy()
+    public void SelectEnemy(int i = 0)
     {
 
     }
