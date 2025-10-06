@@ -45,7 +45,6 @@ public class GameView : MonoBehaviour
             enemyScreen.SetScreenText(text);
             enemyScreen.darken.SetActive(true);
             confirmButton.SetActive(true);
-            Reload();
         }
     }
     public void Reload()
