@@ -33,4 +33,8 @@ public class EnemyScreenModel
         return num;
     }
 
+    public void SelectEnemy(int index)
+    {
+        enemies[index].selected = true;
+    }
 }

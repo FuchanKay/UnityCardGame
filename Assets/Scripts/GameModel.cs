@@ -10,7 +10,7 @@ public enum Mode
     Regular,
     ForceDiscard,
     Swap,
-    EnemySelection
+    EnemySelect
 }
 
 public class GameModel
@@ -23,6 +23,8 @@ public class GameModel
     public DiscardPileModel discardPile;
     public HandModel hand;
     public CardModel lastCardSelected;
+
+    public EnemyModel enemySelected;
 
     public EnemyScreenModel enemyScreen;
 
@@ -66,6 +68,10 @@ public class GameModel
 
         enemyScreen.AddEnemy(new SkellyEnemy(1));
         enemyScreen.AddEnemy(new SkellyEnemy(2));
+
+        enemySelected = enemyScreen.GetEnemy(0);
+
+        enemySelected.selected = true;
     }
     public void QueueEvent(Event e)
     {
@@ -281,15 +287,15 @@ public class GameModel
             hand.Discard(cardsToDiscard);
         }
     }
-    public void SelectEnemyQ()
-    {
-        //Event selectEnemy = new SelectEnemyEvent(this);
-        //this.QueueEvent(selectEnemy);
-    }
-
     public void SelectEnemy(int i = 0)
     {
-
+        EnemyModel selected = enemyScreen.GetEnemy(i);
+        if (selected != enemySelected && selected.isAlive)
+        {
+            selected.selected = true;
+            enemySelected.selected = false;
+            enemySelected = selected;
+        }
     }
 
     public void SwapCardsQ()

@@ -34,7 +34,6 @@ public abstract class Event
 //TODO: Enemy damage event (AOE, TARGET, RANDOM)
 //TODO: Player damage event
 //TODO: Target enemy event
-//TODO: Force discard card(s) event (hard)
 //TODO: 
 
 public class ResourceEvent : Event
@@ -180,20 +179,6 @@ public class SwapEvent : Event
     public override void Execute()
     {
         game.SwapCards();
-    }
-}
-
-public class SelectEnemyEvent : Event
-{
-    public SelectEnemyEvent(GameModel game)
-    {
-        this.game = game;
-        type = EventType.SelectEnemy;
-    }
-
-    public override void Execute()
-    {
-        game.SelectEnemy();
     }
 }
 

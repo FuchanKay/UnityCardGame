@@ -14,11 +14,12 @@ public class GameView : MonoBehaviour
     public EnemyScreenView enemyScreen;
 
     public GameObject confirmButton;
-    //.setActive(bool);
+    private float timer = 0.0f;
 
     void Start()
     {
         Debug.Log("start");
+        Screen.SetResolution(1920, 1080, true);
         game = new();
         this.Reload();
     }
@@ -26,6 +27,12 @@ public class GameView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timer += Time.deltaTime;
+        if (timer > 0.5f)
+        {
+            timer = 0.0f;
+            this.Reload();
+        }
         //this allows for the events to happen in sequential order, but each event happens instantly which should be changed
         if (game.eventQueue.HasEvent() && !game.eventQueue.isPaused)
         {
@@ -76,11 +83,6 @@ public class GameView : MonoBehaviour
         game.DiscardHandQ();
     }
 
-    public void SelectEnemy()
-    {
-        game.SelectEnemyQ();
-    }
-
     public void DeselectAll()
     {
         game.DeselectAllCards();
@@ -99,6 +101,13 @@ public class GameView : MonoBehaviour
         game.SelectCard(index);
         Reload();
     }
+
+    public void SelectEnemy(int index)
+    {
+        game.SelectEnemy(index);
+        Reload();
+    }
+
     public static GameObject CreateCardView(CardModel model)
     {
         var cardObj = Instantiate(cardPrefab);

@@ -9,6 +9,8 @@ public class EnemyView : MonoBehaviour
     public GameObject hpRemaining;
     public GameObject hpText;
 
+    public int index = 0;
+
     private const float HP_BAR_WIDTH = 90.0f;
 
     private const float HP_BAR_HEIGHT = 10.0f;
@@ -41,8 +43,13 @@ public class EnemyView : MonoBehaviour
         hpRT.sizeDelta = new Vector2(HP_BAR_WIDTH * fraction, HP_BAR_HEIGHT);
         Vector3 position = hpRemaining.transform.position;
         position = new Vector3(position.x - HP_BAR_WIDTH * fraction / 4, position.y, position.z);
+
+        select.SetActive(model.selected);
     }
 
-
+    public void Select()
+    {
+        gameView.GetComponent<GameView>().SelectEnemy(index);
+    }
 
 }

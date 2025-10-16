@@ -10,11 +10,13 @@ public class EnemyScreenView : MonoBehaviour
     public GameObject screenText;
     public GameObject darken;
 
+    public GameObject enemiesGameObject;
+    List<GameObject> enemies = new();
+
     public GameObject enemyPrefab;
 
-    private List<GameObject> enemies = new();
 
-    private const float yCoordinate = 20.0f;
+    private const float yCoordinate = 40.0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,9 +34,6 @@ public class EnemyScreenView : MonoBehaviour
     {
         TextMeshProUGUI screenTextTMP = screenText.GetComponent<TMPro.TextMeshProUGUI>();
         screenTextTMP.text = text;
-
-
-
     }
     public void Reload(GameModel game)
     {
@@ -55,6 +54,7 @@ public class EnemyScreenView : MonoBehaviour
         for (int i = enemies.Count; i < model.NumberOfEnemies(); i++)
         {
             GameObject enemyObj = Instantiate(enemyPrefab);
+            enemyObj.GetComponent<EnemyView>().index = enemies.Count;
             enemies.Add(enemyObj);
             enemyObj.transform.SetParent(this.transform);
         }

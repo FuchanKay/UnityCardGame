@@ -17,6 +17,7 @@ public abstract class EnemyModel
     public int hp;
     public bool isAlive;
     public string description;
+    public bool selected = false;
 
     //if the enemy has a specific TakeDamage effect, override this method in the class
     public void TakeDamage(int x)
