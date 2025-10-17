@@ -24,7 +24,7 @@ public class GameModel
     public HandModel hand;
     public CardModel lastCardSelected;
 
-    public EnemyModel enemySelected;
+    public EnemyModel selectedEnemy;
 
     public EnemyScreenModel enemyScreen;
 
@@ -39,39 +39,41 @@ public class GameModel
     {
         // just in case
         mode = Mode.Regular;
-        deck = new DeckModel();
-        eventQueue = new EventQueue();
-        resourceCount = new ResourceCountModel();
-        drawPile = new DrawPileModel();
-        discardPile = new DiscardPileModel();
-        hand = new HandModel();
-        enemyScreen = new EnemyScreenModel();
+        deck = new DeckModel(this);
+        eventQueue = new EventQueue(this);
+        resourceCount = new ResourceCountModel(this);
+        drawPile = new DrawPileModel(this);
+        discardPile = new DiscardPileModel(this);
+        hand = new HandModel(this);
+        enemyScreen = new EnemyScreenModel(this);
+
         //original deck for now
-        deck.AddCard(new CardModel(Type.Arcane, Letter.A, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
-        deck.AddCard(new CardModel(Type.Hemo, Letter.B, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
-        deck.AddCard(new CardModel(Type.Holy, Letter.C, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
-        deck.AddCard(new CardModel(Type.Unholy, Letter.D, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
-        deck.AddCard(new CardModel(Type.Arcane, Letter.E, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
-        deck.AddCard(new CardModel(Type.Hemo, Letter.F, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
-        deck.AddCard(new CardModel(Type.Holy, Letter.G, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
-        deck.AddCard(new CardModel(Type.Unholy, Letter.H, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
-        deck.AddCard(new CardModel(Type.Arcane, Letter.A, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
-        deck.AddCard(new CardModel(Type.Hemo, Letter.B, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
-        deck.AddCard(new CardModel(Type.Holy, Letter.C, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
-        deck.AddCard(new CardModel(Type.Unholy, Letter.D, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
-        deck.AddCard(new CardModel(Type.Arcane, Letter.E, 1, new ResourceEvent(this, Type.Arcane, 1), "When Drawn, gain 1 Arcane"));
-        deck.AddCard(new CardModel(Type.Hemo, Letter.F, 1, new ResourceEvent(this, Type.Hemo, 1), "When Drawn, gain 1 Hemo"));
-        deck.AddCard(new CardModel(Type.Holy, Letter.G, 1, new ResourceEvent(this, Type.Holy, 1), "When Drawn, gain 1 Holy"));
-        deck.AddCard(new CardModel(Type.Unholy, Letter.H, 1, new ResourceEvent(this, Type.Unholy, 1), "When Drawn, gain 1 Unholy"));
+        deck.AddCard(new CardModelA(this, Type.Arcane, 1));
+        deck.AddCard(new CardModelA(this, Type.Arcane, 1));
+        deck.AddCard(new CardModelA(this, Type.Holy, 1));
+        deck.AddCard(new CardModelA(this, Type.Holy, 1));
+        deck.AddCard(new CardModelA(this, Type.Holy, 1));
+        deck.AddCard(new CardModelA(this, Type.Arcane, 1));
+        deck.AddCard(new CardModelD(this, Type.Hemo, 1));
+        //deck.AddCard(new CardModelA(this, Type.Arcane, 1));
+        //deck.AddCard(new CardModelB(this, Type.Hemo, 1));
+        //deck.AddCard(new CardModelB(this, Type.Arcane, 1));
+        //deck.AddCard(new CardModelB(this, Type.Hemo, 1));
+        //deck.AddCard(new CardModelB(this, Type.Unholy, 1));
+        //deck.AddCard(new CardModelB(this, Type.Unholy, 1));
+        //deck.AddCard(new CardModelB(this, Type.Unholy, 1));
+        //deck.AddCard(new CardModelB(this, Type.Unholy, 1));
+        //deck.AddCard(new CardModelB(this, Type.Arcane, 1));
+
         //adds deck to draw pile
         drawPile.AddDeck(deck);
 
         enemyScreen.AddEnemy(new SkellyEnemy(1));
         enemyScreen.AddEnemy(new SkellyEnemy(2));
 
-        enemySelected = enemyScreen.GetEnemy(0);
+        selectedEnemy = enemyScreen.GetEnemy(0);
 
-        enemySelected.selected = true;
+        selectedEnemy.selected = true;
     }
     public void QueueEvent(Event e)
     {
@@ -102,7 +104,7 @@ public class GameModel
     public void SelectCard(int index)
     {
         hand.SelectCard(index);
-        description = hand.GetDescriptionCard().generateDescription();
+        description = hand.GetDescriptionCard().GenerateDescription();
     }
     public void DeselectAllCards()
     {
@@ -118,9 +120,9 @@ public class GameModel
             //TODO: i feel like this bug is really prone to bugs. if there is a problem with hand good chance its here
             CardModel discarded = hand.selectedCards[i];
 
-            if (discarded.discard)
+            if (discarded.hasDiscardEffect)
             {
-                //TODO: add when discarded effect
+                discarded.whenDiscarded();
             }
         }
         Debug.Log(hand.discardedCards.Count);
@@ -139,6 +141,11 @@ public class GameModel
                 description = "";
             }
         }
+    }
+
+    public void SetDescription(string description)
+    {
+        this.description = description;
     }
     //Methods ending with Q will queue the event into event queue
     //Methods not ending with Q will execute instantly
@@ -216,12 +223,45 @@ public class GameModel
         enemyScreen.AddEnemy(enemy);
     }
 
+    public void AOEDamage(int dmg)
+    {
+        this.enemyScreen.AOEDamage(dmg);
+    }
+
+    public void AOEDamageQ(int dmg)
+    {
+        Event aoeDamage = new AOEDamageEvent(this, dmg);
+        this.QueueEvent(aoeDamage);
+    }
+
+    public void SelectedDamage(int dmg)
+    {
+        this.selectedEnemy.TakeDamage(dmg);
+    }
+
+
+    public void SelectedDamageQ(int dmg)
+    {
+        Event SelectedDamage = new SelectedDamageEvent(this, dmg);
+        this.QueueEvent(SelectedDamage);
+    }
+
+    public void RandomDamage(int dmg)
+    {
+        this.enemyScreen.GetRandomEnemy().TakeDamage(dmg);
+    }
+
+    public void RandomDamageQ(int dmg)
+    {
+        Event RandomDamage = new RandomDamageEvent(this, dmg);
+        this.QueueEvent(RandomDamage);
+    }
+
     public void DrawCardQ(int num = 1)
     {
         Event drawCard = new DrawCardEvent(this, num);
         this.QueueEvent(drawCard);
     }
-
     public void DrawCard(int count = 1)
     {
         for (int i = 0; i < count; i++)
@@ -230,7 +270,7 @@ public class GameModel
             {
                 CardModel card = this.drawPile.DrawCard();
                 bool found = this.hand.AddCard(card);
-                card.whenDrawn.Execute();
+                if (card.hasDrawEffect) card.WhenDrawn();
                 //TODO: add a visual indicator that hand is full if found is true
             }
             else if (discardPile.Size() > 0 && !hand.IsFull())
@@ -239,7 +279,7 @@ public class GameModel
                 drawPile.AddCards(shuffled);
                 CardModel card = this.drawPile.DrawCard();
                 hand.AddCard(card);
-                card.whenDrawn.Execute();
+                //card.whenDrawn.Execute();
                 //TODO: add a visual indicator that hand is full if found is true
             }
         }
@@ -261,6 +301,7 @@ public class GameModel
                 discardPile.AddCard(card);
             }
         }
+        SetDescription("");
         hand.DeselectAllCards();
     }
     public void ForceDiscardQ(int num = 1)
@@ -290,11 +331,11 @@ public class GameModel
     public void SelectEnemy(int i = 0)
     {
         EnemyModel selected = enemyScreen.GetEnemy(i);
-        if (selected != enemySelected && selected.isAlive)
+        if (selected != selectedEnemy && selected.isAlive)
         {
             selected.selected = true;
-            enemySelected.selected = false;
-            enemySelected = selected;
+            selectedEnemy.selected = false;
+            selectedEnemy = selected;
         }
     }
 

@@ -24,7 +24,7 @@ public class CardView : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        this.model = new(Type.Empty);
+        this.model = new CardModelEmpty();
         this.transform.SetParent(hand.transform);
         this.UpdateView(model);
     }

@@ -3,14 +3,15 @@ using UnityEngine;
 public class DrawPileModel
 {
     private List<CardModel> drawPile;
-
-    public DrawPileModel()
+    private GameModel game;
+    public DrawPileModel(GameModel game)
     {
-        this.New();
+        this.New(game);
     }
 
-    public void New()
+    public void New(GameModel game)
     {
+        this.game = game;
         drawPile = new List<CardModel>();
     }
 

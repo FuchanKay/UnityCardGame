@@ -1,29 +1,32 @@
 ﻿using System.Collections.Generic;
 public class HandModel
 {
-    public int size = 7;
+    public int size = Constants.handSize;
     public int selectionCount = 1;
     public CardModel descriptionCard;
     private List<CardModel> hand;
+
+    private GameModel game;
 
     public List<CardModel> selectedCards;
 
     public List<CardModel> discardedCards;
 
-    public HandModel()
+    public HandModel(GameModel game)
     {
-        this.New();
+        this.New(game);
     }
 
-    public void New()
+    public void New(GameModel game)
     {
+        this.game = game;
         hand = new List<CardModel>();
         selectedCards = new List<CardModel>();
-        descriptionCard = new CardModel(Type.Empty);
+        descriptionCard = new CardModelEmpty();
         for (int i = 0; i < size; i++)
         {
             //hand will never not be empty. It will always contain 7 cards of type Empty. Empty is not a real card type, it just signifies that there is no card within that hand slot
-            hand.Insert(0, new CardModel(Type.Empty));
+            hand.Insert(0, new CardModelEmpty());
         }
     }
 
@@ -37,7 +40,7 @@ public class HandModel
         {
             selectedCards.RemoveAt(i);
         }
-        descriptionCard = new CardModel(Type.Empty);
+        descriptionCard = new CardModelEmpty();
     }
 
     public bool AddCard(CardModel card)
@@ -114,7 +117,7 @@ public class HandModel
         }
         if (!card.selected && descriptionCard == card)
         {
-            descriptionCard = new CardModel(Type.Empty);
+            descriptionCard = new CardModelEmpty();
         }
         return card.selected;
     }
@@ -145,18 +148,27 @@ public class HandModel
     public CardModel RemoveCard(int index)
     {
         CardModel removed = hand[index];
-        hand[index] = new CardModel(Type.Empty);
+        hand[index] = new CardModelEmpty();
+        for (int i = 0; i < selectedCards.Count; i++)
+        {
+            CardModel card = selectedCards[i];
+            if (card == removed)
+            {
+                selectedCards.Remove(card);
+                card.selected = false;
+            }
+        }
         return removed;
     }
 
     public CardModel RemoveCard(CardModel card)
     {
-        var removed  = new CardModel(Type.Empty);
+        CardModel removed  = new CardModelEmpty();
         for (int i = 0; i < hand.Count; i++)
         {
             if (hand[i] == card)
             {
-                hand[i] = new CardModel(Type.Empty);
+                hand[i] = new CardModelEmpty();
                 removed = card;
             }
         }
@@ -169,6 +181,7 @@ public class HandModel
         for (int i = 0; i < cards.Count; i++)
         {
             CardModel card = cards[i];
+            card.selected = false;
             RemoveCard(card);
         }
     }

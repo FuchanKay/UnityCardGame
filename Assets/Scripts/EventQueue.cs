@@ -3,9 +3,16 @@ public class EventQueue
 {
     private Queue<Event> queue;
     public bool isPaused = false;
+    private GameModel game;
     
-    public EventQueue()
+    public EventQueue(GameModel game)
     {
+        New(game);
+    }
+
+    public void New(GameModel game)
+    {
+        this.game = game;
         queue = new Queue<Event>();
     }
 

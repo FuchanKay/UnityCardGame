@@ -5,15 +5,17 @@ using UnityEngine;
 public class DeckModel
 {
     private List<CardModel> deck;
+    private GameModel game;
 
-    public DeckModel()
+    public DeckModel(GameModel game)
     {
-        this.New();
+        this.New(game);
     }
 
-    public void New()
+    public void New(GameModel game)
     {
         deck = new List<CardModel>();
+        this.game = game;
     }
 
     public void AddCard(CardModel card)

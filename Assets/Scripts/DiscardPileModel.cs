@@ -4,14 +4,17 @@ using UnityEngine;
 public class DiscardPileModel
 {
     private List<CardModel> discardPile;
-    public DiscardPileModel()
+    private GameModel game;
+
+    public DiscardPileModel(GameModel game)
     {
-        this.New();
+        this.New(game);
     }
 
-    public void New()
+    public void New(GameModel game)
     {
         discardPile = new();
+        this.game = game;
     }
 
     public List<CardModel> Reshuffle()

@@ -1,10 +1,12 @@
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyView : MonoBehaviour
 {
     public GameObject select;
     public GameObject nameText;
-    public GameObject gameView;
+    public GameView game;
 
     public GameObject hpRemaining;
     public GameObject hpText;
@@ -19,8 +21,7 @@ public class EnemyView : MonoBehaviour
     void Start()
     {
         //suspicious about this function but we'll let it slide
-        gameView = GameObject.Find("Game");
-        GameView game = gameView.GetComponent<GameView>();
+        game = GameObject.Find("Game").GetComponent<GameView>();
         select.SetActive(false);
     }
 
@@ -37,19 +38,17 @@ public class EnemyView : MonoBehaviour
         var nameTMP = nameText.GetComponent<TMPro.TextMeshProUGUI>();
         nameTMP.text = model.name;
 
-        float fraction = model.hp / model.maxHp;
+        float fraction = (float) model.hp / (float) model.maxHp;
 
-        var hpRT = hpRemaining.GetComponent<RectTransform>();
-        hpRT.sizeDelta = new Vector2(HP_BAR_WIDTH * fraction, HP_BAR_HEIGHT);
-        Vector3 position = hpRemaining.transform.position;
-        position = new Vector3(position.x - HP_BAR_WIDTH * fraction / 4, position.y, position.z);
+        var hpSlider = hpRemaining.GetComponent<Slider>();
+        hpSlider.value = fraction;
 
         select.SetActive(model.selected);
     }
 
     public void Select()
     {
-        gameView.GetComponent<GameView>().SelectEnemy(index);
+        game.SelectEnemy(index);
     }
 
 }

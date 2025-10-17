@@ -12,7 +12,10 @@ public enum EventType
     ForceDiscard,
     Swap,
     SelectEnemy,
-    AddEnemy
+    AddEnemy,
+    AOEDamage,
+    SelectedDamage,
+    RandomDamage,
 }
 
 public abstract class Event
@@ -198,3 +201,54 @@ public class AddEnemyEvent : Event
     }
 
 }
+
+public class AOEDamageEvent : Event
+{
+    public int dmg;
+
+    public AOEDamageEvent(GameModel game, int dmg)
+    {
+        this.game = game;
+        this.dmg = dmg;
+        type = EventType.AOEDamage;
+    }
+
+    public override void Execute()
+    {
+        game.AOEDamage(this.dmg);
+    }
+}
+
+public class SelectedDamageEvent : Event
+{
+    public int dmg;
+
+    public SelectedDamageEvent(GameModel game, int dmg)
+    {
+        this.game = game;
+        this.dmg = dmg;
+        type = EventType.SelectedDamage;
+    }
+
+    public override void Execute()
+    {
+        game.SelectedDamage(this.dmg);
+    }
+}
+
+public class RandomDamageEvent : Event
+{
+    public int dmg;
+    public RandomDamageEvent(GameModel game, int dmg)
+    {
+        this.game = game;
+        this.dmg = dmg;
+        type = EventType.RandomDamage;
+    }
+
+    public override void Execute()
+    {
+        game.RandomDamage(this.dmg);
+    }
+}
+

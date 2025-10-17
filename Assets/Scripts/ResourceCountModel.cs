@@ -3,19 +3,21 @@ using UnityEditor.Experimental.GraphView;
 
 public class ResourceCountModel
 {
-    const int CAP = 99;
+    private int CAP = Constants.resourceCap;
+    private GameModel game;
     public int arcaneCount;
     public int hemoCount;
     public int holyCount;
     public int unholyCount;
 
-    public ResourceCountModel()
+    public ResourceCountModel(GameModel game)
     {
-        this.New();
+        this.New(game);
     }
 
-    public void New()
+    public void New(GameModel game)
     {
+        this.game = game;
         arcaneCount = 0;
         hemoCount = 0;
         holyCount = 0;

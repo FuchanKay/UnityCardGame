@@ -56,7 +56,7 @@ public class EnemyScreenView : MonoBehaviour
             GameObject enemyObj = Instantiate(enemyPrefab);
             enemyObj.GetComponent<EnemyView>().index = enemies.Count;
             enemies.Add(enemyObj);
-            enemyObj.transform.SetParent(this.transform);
+            enemyObj.transform.SetParent(this.enemiesGameObject.transform);
         }
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -66,9 +66,5 @@ public class EnemyScreenView : MonoBehaviour
             EnemyView enemyView = enemyObj.GetComponent<EnemyView>();
             enemyView.UpdateView(enemyModel);
         }
-        //for (int i = 0; i < model.NumberOfEnemies(); i++)
-        //{
-
-        //}
     }
 }

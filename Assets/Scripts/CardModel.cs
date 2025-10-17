@@ -1,8 +1,7 @@
-public enum Letter
-{
-    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z
-}
-
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
+using UnityEngine.Rendering.Universal.Internal;
 public enum Type
 {
     Arcane,
@@ -13,72 +12,367 @@ public enum Type
     Blight
 }
 
-public class CardModel
+public abstract class CardModel
 {
-    public Type type;
-    public Letter letter;
+    private const int MAX_UPGRADE_NUM = 5;
 
+    protected GameModel game;
     public bool selected = false;
+    public Type type;
+    public string letter;
+    public int level;
 
-    //amount of runes gained when card is drawn
-    public int drawnNum;
-    //event that is executed when card is drawn
-    public Event? whenDrawn;
-    public string drawnDescription;
-        
-    //determines whether card has a retain effect
-    public bool retain;
-    public Event? whenRetained;
-    public string retainedDescription;
+    public bool hasDrawEffect = false;
 
-    //determines whether card has a discard effect
-    public bool discard;
-    public Event? whenDiscarded;
-    public string discardedDescription;
+    public bool hasRetainEffect = false;
 
-    //determines whether card has a swap effect
-    public bool swap;
-    public Event? whenSwapped;
-    public string swappedDescription;
+    public bool hasDiscardEffect = false;
 
-    public CardModel (
-        Type type, Letter letter = Letter.A,
-        int drawnNum = 1, Event whenDrawn = null, string drawnDescription = "",
-        bool retain = false, Event whenRetained = null, string retainedDescription = "",
-        bool discard = false, Event whenDiscarded = null, string discardedDescription = "",
-        bool swap = false, Event whenSwapped = null, string swappedDescription = "")
+    public bool hasSwapEffect = false;
+
+    public abstract string GenerateDescription();
+
+    public abstract void WhenDrawn();
+
+    public abstract void WhenRetained();
+
+    public abstract void whenDiscarded();
+
+    public abstract void Upgrade();
+
+    public abstract void Unupgrade();
+
+    public abstract void Reset();
+
+}
+
+//for empty card slots in hand
+public class CardModelEmpty : CardModel
+{
+    public CardModelEmpty()
     {
-        this.type = type;
-        this.letter = letter;
-
-        this.drawnNum = drawnNum;
-        this.whenDrawn = whenDrawn;
-        this.drawnDescription = drawnDescription;
-
-        this.retain = retain;
-        this.whenRetained = whenRetained;
-        this.retainedDescription = retainedDescription;
-
-        this.discard = discard;
-        this.whenDiscarded = whenDiscarded;
-        this.discardedDescription = discardedDescription;
-
-        this.swap = swap;
-        this.whenSwapped = whenSwapped;
-        this.swappedDescription = swappedDescription;
+        this.type = Type.Empty;
+        this.letter = "";
     }
 
-    public string generateDescription()
+    public override string GenerateDescription()
     {
-        if (type == Type.Empty) return "";
-        string description = string.Concat("When Drawn: Gain ", drawnNum, " ", type.ToString());
-        if (retain)
+        return "";
+    }
+
+    public override void Reset()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Unupgrade()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void Upgrade()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void whenDiscarded()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void WhenDrawn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void WhenRetained()
+    {
+        throw new System.NotImplementedException();
+    }
+
+}
+
+
+//gives X resources when drawn. no special effects 
+public class CardModelA : CardModel
+{
+    private int[] upgrades = { 2, 3, 4, 6, 8 };
+    private int whenDrawnNum;
+    public CardModelA(GameModel game, Type type, int level = 1)
+    {
+        this.game = game;
+        this.type = type;
+        this.letter = "A";
+        this.level = level;
+
+        this.whenDrawnNum = upgrades[this.level - 1];
+        
+        this.hasDrawEffect = true;
+
+    }
+
+    public override string GenerateDescription()
+    {
+        return $"When Drawn, Draw {whenDrawnNum} {type.ToString()}";
+    }
+
+    public override void Reset()
+    {
+        return;
+    }
+
+    public override void Unupgrade()
+    {
+        if (this.level > 1)
         {
-            //TODO: add actual description generator. this will be a PAIN.
-            description = string.Concat(description, "\nWhen Retained: ");
+            this.level--;
+            this.whenDrawnNum = upgrades[this.level - 1];
+        }
+    }
+
+    public override void Upgrade()
+    {
+        if (this.level < Constants.maxCardLevel)
+        {
+            this.level++;
+            this.whenDrawnNum = upgrades[this.level - 1];
+        }
+    }
+
+    public override void whenDiscarded()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void WhenDrawn()
+    {
+        this.game.AddResourceQ(this.type, whenDrawnNum);
+    }
+
+    public override void WhenRetained()
+    {
+        throw new System.NotImplementedException();
+    }
+}
+
+// gives X resources and does X damage to a random when drawn
+public class CardModelB : CardModel
+{
+    private int[] resUpgrades = {1, 2, 3, 4, 5};
+    private int[] dmgUpgrades = {2, 4, 6, 9, 12};
+    private int whenDrawnNum;
+    private int dmgNum;
+
+    public CardModelB(GameModel game, Type type, int level = 1)
+    {
+        this.game = game;
+        this.letter = "B";
+        this.type = type;
+        this.level = level;
+
+        this.hasDrawEffect = true;
+
+        this.whenDrawnNum = resUpgrades[level - 1];
+        this.dmgNum = resUpgrades[level - 1];
+    }
+
+    public override string GenerateDescription()
+    {
+        return $"When Drawn: Gain {whenDrawnNum} {this.type.ToString()} and Deal {dmgNum} Damage to a random enemy";
+    }
+
+    public override void Reset()
+    {
+        return;
+    }
+
+    public override void Unupgrade()
+    {
+        if (this.level > 1)
+        {
+            this.level--;
+            this.whenDrawnNum = resUpgrades[this.level - 1];
+            this.dmgNum = dmgUpgrades[this.level - 1];
+        }
+    }
+
+    public override void Upgrade()
+    {
+        if (this.level < Constants.maxCardLevel)
+        {
+            this.level++;
+            this.whenDrawnNum = resUpgrades[this.level - 1];
+            this.dmgNum = dmgUpgrades[this.level - 1];
+        }
+    }
+
+    public override void whenDiscarded()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void WhenDrawn()
+    {
+        this.game.AddResourceQ(this.type, this.whenDrawnNum);
+        this.game.RandomDamageQ(this.dmgNum);
+    }
+
+    public override void WhenRetained()
+    {
+        throw new System.NotImplementedException();
+    }
+}
+
+//Does not give resources when drawn. Every X times this card is drawn, draw another card. useful for filling up hand
+public class CardModelC : CardModel
+{
+    //TODO: Reset this back to 3
+    private int[] frequencyUpgrades = {3, 3, 2, 2, 1};
+    private int frequency;
+    private int countTemp;
+    private bool firstTimeTemp;
+    public CardModelC(GameModel game, Type type, int level = 1)
+    {
+        this.game = game;
+        this.type = type;
+        this.letter = "C";
+        this.level = level;
+
+        this.hasDrawEffect = true;
+
+        this.firstTimeTemp = true;
+        this.countTemp = 0;
+
+        this.frequency = frequencyUpgrades[this.level - 1];
+
+    }
+
+
+    public override string GenerateDescription()
+    {
+        string description;
+        if (this.frequency > 1)
+        {
+            description = $"When Drawn: Every {frequency} Times This Card is Drawn, Draw Another Card (Current: {countTemp % frequency})";
+        }
+        else
+        {
+            description = "When Drawn: Draw Another Card";
         }
         return description;
     }
 
+    public override void Reset()
+    {
+        this.countTemp = 0;
+        this.firstTimeTemp = true;
+    }
 
+    public override void Unupgrade()
+    {
+        if (this.level > 1)
+        {
+            this.level--;
+            this.frequency = frequencyUpgrades[this.level - 1];
+        }
+    }
+
+    public override void Upgrade()
+    {
+        if (this.level < Constants.maxCardLevel)
+        {
+            this.level++;
+            this.frequency = frequencyUpgrades[this.level - 1];
+        }
+    }
+
+    public override void whenDiscarded()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void WhenDrawn()
+    {
+        bool drawExtra = false;
+        countTemp++;
+        if ((countTemp % frequency == 0 && !firstTimeTemp) || frequency == 1)
+        {
+            countTemp = 0;
+            firstTimeTemp = false;
+            drawExtra = true;
+        }
+        firstTimeTemp = false;
+        if (drawExtra)
+        {
+            game.DrawCardQ();
+        }
+
+    }
+
+    public override void WhenRetained()
+    {
+        throw new System.NotImplementedException();
+    }
 }
+
+public class CardModelD : CardModel 
+{
+    private int[] discardUpgrades = {3, 4, 6, 8, 11};
+    private int discardNum;
+
+    public CardModelD(GameModel game, Type type, int level = 1)
+    {
+        this.game = game;
+        this.type = type;
+        this.level = level;
+        this.letter = "D";
+
+        this.discardNum = discardUpgrades[this.level - 1];
+        this.hasDiscardEffect = true;
+
+    }
+
+    public override string GenerateDescription()
+    {
+        return $"When Discarded: Gain {this.discardNum} {type.ToString()}";
+    }
+
+    public override void Reset()
+    {
+        return;
+    }
+
+    public override void Unupgrade()
+    {
+        if (this.level > 1)
+        {
+            this.level--;
+            this.discardNum = discardUpgrades[this.level - 1];
+        }
+    }
+
+    public override void Upgrade()
+    {
+        if (this.level < Constants.maxCardLevel)
+        {
+            this.level++;
+            this.discardNum = discardUpgrades[this.level - 1];
+        }
+    }
+
+    public override void whenDiscarded()
+    {
+        this.game.AddResourceQ(this.type, discardNum);
+    }
+
+    public override void WhenDrawn()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void WhenRetained()
+    {
+        throw new System.NotImplementedException();
+    }
+}
+

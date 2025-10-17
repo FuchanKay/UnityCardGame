@@ -20,9 +20,9 @@ public abstract class EnemyModel
     public bool selected = false;
 
     //if the enemy has a specific TakeDamage effect, override this method in the class
-    public void TakeDamage(int x)
+    public void TakeDamage(int dmg)
     {
-        hp -= x;
+        hp -= dmg;
         if (hp <= 0)
         {
             hp = 0;
